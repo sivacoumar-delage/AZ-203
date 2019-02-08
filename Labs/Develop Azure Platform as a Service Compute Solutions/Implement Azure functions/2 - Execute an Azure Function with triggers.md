@@ -54,7 +54,7 @@
 
 1. In [**Azure Portal**](https://portal.azure.com), in the **Favorites** menu, click **Storage accounts**
 
-1. Click *az203storageaccountsde* created in a previous lab
+1. Click *az203storageaccountXXXXX* created in a previous lab
 
 1. In the **Storage account** blade, click **Queues** in the menu
 
@@ -107,7 +107,19 @@
 
 1. In the **Extensions not Installed** dialog, click **Install**
 
-1. 
+1. In the **Extensions Installation Succeeded** dialog, click **Continue**
+
+1. In the **New Function** dialog, under **Name**, type *DownloadPictureFromUrl*
+
+1. Click **Create**
+
+1. Under **Queue name**, type *profile-picture-url-queue*
+
+1. Under **Storage account connection**, click **new**
+
+1. In the **Storage Account** blade, select *az203storageaccountXXXXX*
+
+1. Click **Create**
 
 </details>
 
@@ -116,9 +128,27 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Open a new tab and navigate to [**Azure Portal**](https://portal.azure.com), in the **Favorites** menu, click **Storage accounts** and select *az203storageaccountXXXXX*
 
-1. Step 2
+1. Click **Queues** and select *profile-picture-url-queue*
+
+1. Go back in the tab, in the *DownloadPictureFromUrl* blade, click **Run**
+
+    The **Request body** displays the message sent to the queue. The **Logs** displays the information with the message content.
+
+1. Update the **Request body** with the message *testfromFunctionApp* and click **Run**
+
+    The **Logs** should display "C# Queue trigger function processed: testfromFunctionApp"
+
+1. Go to the other tab, and click **Add message**
+
+1. In the **Add message to queue** dialog, under **Message text**, type *testFromQueue*, and click **OK**
+
+1. Click **Refresh**
+
+1. Go back to the tab, in the *DownloadPictureFromUrl* blade, check the **Logs**
+
+    The **Logs** should display "C# Queue trigger function processed: testFromQueue"
 
 </details>
 
