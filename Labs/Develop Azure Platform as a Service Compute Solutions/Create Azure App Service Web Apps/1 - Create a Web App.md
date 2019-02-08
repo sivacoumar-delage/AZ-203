@@ -4,6 +4,9 @@
 
 #### Task 1: Sign in to the Azure Portal
 
+<details>
+<summary>Click here to display answers</summary>
+
 1. Open a web browser.
 
 1. Go to *(<https://portal.azure.com>)*.
@@ -14,7 +17,12 @@
 
 1. Click **Sign In**.
 
+</details>
+
 #### Task 2: Locate the Web App in the Azure Marketplace
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the menu on the left, click **Create a resource**
 
@@ -22,7 +30,12 @@
 
 1. Under **Featured** on the right side of the blade, click **Web App**
 
+</details>
+
 #### Task 3: Create a Web App
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. On the **Web App** blade under **App name**, enter a unique name 
 
@@ -68,7 +81,12 @@
 
 1. Click **Create**
 
+</details>
+
 #### Task 4: Navigate to the created Web App
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the **Favorites** menu, click **App Services**
 
@@ -77,6 +95,8 @@
 1. On the **App Service** blade, in the **Overview** pane, click the link under **URL**
 
     > **Note:** This will open a new browser tab and display a web site that says **"Your App Service app is up and running"** which confirms that the web app is available over the public Internet.
+
+</details>
 
 #### Task 5: Delete the Web App, the App Service Plan and the Resource Group
 
@@ -102,9 +122,14 @@
 
 1. On the **All resources** blade, you can confirm the deletion of all resources created during this lab
 
+</details>
+
 ## Lab 2: ...by using Azure CLI
 
 #### Task 1: Sign in to the Azure Portal
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. Open a web browser.
 
@@ -115,6 +140,8 @@
 1. Enter the password for your Microsoft account.
 
 1. Click **Sign In**.
+
+</details>
 
 #### Task 2: Open the Cloud Shell on Azure Portal
 
@@ -134,7 +161,12 @@
 
     ![Cloud Shell environment](https://docs.microsoft.com/en-us/azure/cloud-shell/media/quickstart/env-selector.png)
 
+</details>
+
 #### Task 3: List all the regions by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following commands:
 
@@ -144,7 +176,12 @@
 
 1. Locate your nearest location, and copy the **name** attribute on a text file
 
+</details>
+
 #### Task 4: Create a Resource Group by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following commands:
 
@@ -168,7 +205,12 @@
 
     > **Note:** [Click here to consult the **az group show** command documentation](https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-show)
 
+</details>
+
 #### Task 5: Create a App Service plan by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following commands:
 
@@ -192,7 +234,12 @@
 
     > **Note:** [Click here to consult the **az appservice plan show** command documentation](https://docs.microsoft.com/en-us/cli/azure/appservice/plan?view=azure-cli-latest#az-appservice-plan-show)
 
+</details>
+
 #### Task 6: Create a Web App by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, replace **"XXXXX"** by a unique name and type the following commands:
 
@@ -217,7 +264,12 @@
 
     > **Note:** [Click here to consult the **az webapp show** command documentation](https://docs.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-show).
 
+</details>
+
 #### Task 7: Restart Web App by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, replace the name of the created web apps and type the following commands:
 
@@ -233,7 +285,12 @@
 
     > **Note:** [Click here to consult the **az webapp list** command documentation](https://docs.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-list).
 
+</details>
+
 #### Task 7: Delete Web App by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, replace the name of the created web apps and type the following commands:
 
@@ -249,7 +306,12 @@
 
     > **Note:** [Click here to consult the **az webapp list** command documentation](https://docs.microsoft.com/en-us/cli/azure/webapp?view=azure-cli-latest#az-webapp-list).
 
+</details>
+
 #### Task 8: Delete a App Service plan by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following commands:
 
@@ -265,7 +327,12 @@
 
     > **Note:** [Click here to consult the **az appservice plan list** command documentation](https://docs.microsoft.com/en-us/cli/azure/appservice/plan?view=azure-cli-latest#az-appservice-plan-list)
 
+</details>
+
 #### Task 9: Delete a Resource Group by using Azure CLI
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following commands:
 
@@ -281,9 +348,14 @@
 
     > **Note:** [Click here to consult the **az group list** command documentation](https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest#az-group-list)
 
+</details>
+
 ## Lab 3: ...by using Azure Powershell
 
 #### Task 1: Sign in to the Azure Portal
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. Open a web browser.
 
@@ -295,7 +367,12 @@
 
 1. Click **Sign In**.
 
+</details>
+
 #### Task 2: Open the Cloud Shell on Azure Portal
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. Launch **Cloud Shell** from the top navigation of the Azure portal.
 
@@ -307,7 +384,12 @@
 
 1. Confirm switching to **PowerShell** and wait for the Azure drive to be built
 
+</details>
+
 #### Task 3: List all the regions by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following commands:
 
@@ -317,7 +399,12 @@
 
 1. Locate your nearest location, and copy the **name** attribute on a text file
 
+</details>
+
 #### Task 4: Create a Resource Group by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following command:
 
@@ -335,7 +422,12 @@
 
     Get-AzureRmResourceGroup -Name "az203-rg"
 
+</details>
+
 #### Task 5: Create a App Service plan by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following command:
 
@@ -353,7 +445,12 @@
 
     Get-AzureRmAppServicePlan -Name "az203-serviceplan"
 
+</details>
+
 #### Task 6: Create a Web App by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, replace **"XXXXX"** by a unique name and type the following command:
 
@@ -372,7 +469,12 @@
 
     Get-AzureRmWebApp -Name "az203-webapp-XXXXX"
 
+</details>
+
 #### Task 7: Restart Web App by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, replace the name of the created web app and type the following commands:
 
@@ -380,7 +482,12 @@
 
     > **Note:** [Click here to consult the **Restart-AzureRmWebApp** command documentation](https://docs.microsoft.com/en-us/powershell/module/azurerm.websites/restart-azurermwebapp).
 
-#### Task 7: Delete Web App by using Azure PowerShell
+</details>
+
+#### Task 8: Delete Web App by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, replace the name of the created web app and type the following command:
 
@@ -392,7 +499,12 @@
 
     Get-AzureRmWebApp -Name "az203-webapp-XXXXX"
 
-#### Task 8: Delete a App Service plan by using Azure PowerShell
+</details>
+
+#### Task 9: Delete a App Service plan by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following command:
 
@@ -406,7 +518,12 @@
 
     > **Note:** [Click here to consult the **Get-AzureRmAppServicePlan** command documentation](https://docs.microsoft.com/en-us/powershell/module/azurerm.websites/get-azurermappserviceplan)
 
-#### Task 9: Delete a Resource Group by using Azure PowerShell
+</details>
+
+#### Task 10: Delete a Resource Group by using Azure PowerShell
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the shell, type the following command:
 
@@ -420,6 +537,8 @@
 
     > **Note:** [Click here to consult the **Get-AzureRmResourceGroup** command documentation](https://docs.microsoft.com/en-us/powershell/module/azurerm.resources/get-azurermresourcegroup)
 
+</details>
+
 ## Lab 4: ... by using Visual Studio
 
 > **Note:** Click here to consult the Microsoft documentation regarding the creation of a [.NET Core web app](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-dotnet) or for an [ASP.NET Framework web app](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-dotnet-framework).
@@ -430,13 +549,21 @@
 
 #### Task 1: Launch Visual Studio 2017
 
+<details>
+<summary>Click here to display answers</summary>
+
 1. Open the **Start** menu (Windows menu)
 
 1. Search **"Visual Studio 2017"**
 
 1. Launch **Visual Studio 2017**
 
+</details>
+
 #### Task 2: Create an ASP<span></span>.NET Core web project
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In Visual Studio, create a project by selecting **File** > **New** > **Project**
 
@@ -454,7 +581,12 @@
 
 1. Click **OK**
 
+</details>
+
 #### Task 3: Debug locally the Web App
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. From the menu, select **Debug** > **Start Debugging** to run the web app locally
 
@@ -464,7 +596,12 @@
 
 1. In Visual Studio, from the menu, select **Debug** > **Stop Debugging**
 
+</details>
+
 #### Task 4: Publish the Web App from Visual Studio
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. In the **Solution Explorer**, right-click the *az203webApp* project and select Publish
 
@@ -493,16 +630,5 @@
 1. Under **Application Insights**, leave the default value to **None**
 
 1. Click **Create**
-
-## Labs Todo
-
-1. Collapse answers for each task
-
-<details>
-<summary>Click here to display answers</summary>
-
-1. Step 1
-
-1. Step 2
 
 </details>

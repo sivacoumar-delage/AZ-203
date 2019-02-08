@@ -13,7 +13,7 @@
 
 </details>
 
-#### Task 2: Create a sub-orchestration of two functions and add replace the second function in the previous orchestration
+#### Task 2: Create a sub-orchestration of two functions and replace the second function in the previous orchestration with the sub-orchestration
 
 <details>
 <summary>Click here to display answers</summary>

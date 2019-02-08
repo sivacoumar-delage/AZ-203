@@ -7,7 +7,7 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. In **Azure Portal**, click **Create a resource**
+1. In [**Azure Portal**](https://portal.azure.com), click **Create a resource**
 
 1. Under **Azure Marketplace**, click **Compute**
 
