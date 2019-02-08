@@ -304,9 +304,3 @@
     If the new version doesn't open with another browser, use another one, or use a private session
 
 </details>
-
-## Next
-
-### Debugging and monitoring
-
-#### Task 1: Debug the published on Azure from Visual Studio
