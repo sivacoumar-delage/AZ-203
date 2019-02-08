@@ -1,0 +1,79 @@
+Create serverless logic with Azure Functions
+============================================
+...by using Azure Portal
+	Creating a FunctionApp from Azure Portal
+	Create a function with Http trigger
+	Edit the function's code to return a string containing the date and time
+	Test the function with Http trigger from Azure Portal
+	Get the connection key of the function from Azure Portal
+	Test the function with Http trigger from Postman
+	Test the function with Http trigger from cURL
+	Check the logs from the monitoring dashboard
+...by using Visual Studio
+	Create an Azure Function in Visual Studio
+	Test an Azure Function in local
+	Get the publish profile of the Azure Function from Azure Portal
+	Publish an Azure Function from Visual Studio
+
+Execute an Azure Function with triggers
+=======================================
+…by using data operations
+	Create a Queue storage
+	Create a function with Queue storage trigger from Visual Studio
+	Test the function with Queue storage trigger from Visual Studio
+
+	Create a function with Queue storage trigger
+ from Azure Portal
+	Test the function with Queue storage trigger from Azure Portal
+	Create a Blob storage
+	Create a function with Blob storage trigger from Visual Studio
+	Test the function with Blob storage trigger from Visual Studio
+	Create a function with Blob storage trigger from Azure Portal
+	Test the function with Blob storage trigger from Azure Portal
+
+…by timers
+	Create a function with Timer trigger from Azure Portal
+	Test the function with Timer trigger from Azure Portal
+	Create a function with Timer trigger from Visual Studio
+	Test the function with Timer trigger from Visual Studio
+…by webhooks
+	Create and configure a GitHub webhook
+	Create a function with GitHub webhook trigger
+ from Azure Portal
+	Test the function with GitHub webhook trigger from Azure Portal
+
+Chain Azure functions together using input and output bindings
+==============================================================
+Read data with input bindings
+	...from a Http trigger
+	...from a Queue trigger
+	...from a Blob trigger
+	...from a Timer trigger
+Write data with output bindings
+	...by sending an Http response
+	...by creating an item to a Queue storage
+	...by creating a file to a Blob storage
+	...by sending a mail
+Chain Azure functions together
+	Create a function with an Http trigger and a Queue storage output
+	Create a function with a Queue trigger and a Blob storage output
+	Create a function with a Blob trigger and a mail output
+	Test the chain
+Design and implement a custom binding
+
+Azure Durable Functions
+=======================
+Simplify the Chaining pattern
+	Create a simple orchestration of three functions
+	Create a sub-orchestration of two functions and add replace the second function in the previous orchestration
+	Testing and monitoring an orchestration
+	Logging with replays
+	Handling errors, retries, cancellation
+Implement a Fan-in / fan-out pattern
+Handling human interaction in an orchestration
+Coordinate the state of long-running operations with the Async HTTP APIs pattern
+Replace a timer trigger with the Monitoring pattern
+Dealing with breaking changes when deploying a new version
+	Do nothing
+	Stop all in-flight instances by clearing the contents of the internal control-queue and workitem-queue queues
+	Side-by-side deployments with deployment slots and the Task Hub
