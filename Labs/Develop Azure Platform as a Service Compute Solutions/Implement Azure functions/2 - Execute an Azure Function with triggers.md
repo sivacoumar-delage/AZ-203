@@ -47,7 +47,7 @@
 
 </details>
 
-#### Task 2: Create and test a Queue storage
+#### Task 2: Create and test a Queue storage in Azure
 
 <details>
 <summary>Click here to display answers</summary>
@@ -86,7 +86,7 @@
 
 1. Click on the button **Clear queue**
 
-1. In the **Dequeue all  messages** dialog, click **Yes**
+1. In the **Dequeue all messages** dialog, click **Yes**
 
     All the messages should be removed from the queue.
 
@@ -152,18 +152,131 @@
 
 </details>
 
-#### Task 5: Create a function with Queue storage trigger from Visual Studio
+#### Task 5: Create and test a Queue storage locally in Azure Storage Explorer
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Start **Microsoft Azure Storage Explorer**
+
+1. Expand **Local & Attached** > **Storage Accounts** > **Emulator - Default Ports (Key)**
+
+1. Right-click **Queues** and select **Create Queue**
+
+1. Type *profile-picture-url-queue*
+
+1. In the *profile-picture-url-queue* tab, click on the button **Add Message**
+
+1. In the **Microsoft Azure Storage Explorer - Add Message** dialog, under **Message text**, type *Alpha*
+
+1. Click **OK**
+
+1. Repeat the last two steps to add the messages *Beta* and *Omega*
+
+1. In the *profile-picture-url-queue* blade, check that the messages has been added to the queue
+
+1. Select the message *Beta*
+
+1. Click on the button **Dequeue Message**
+
+1. In the pop-up dialog, click **Yes**
+
+    The message *Alpha* will be removed from the queue. 
+    
+    > **Note:** A queue is first in, first-out.
+
+1. Click on the button **Clear Queue**
+
+1. In the pop-up dialog, click **Yes**
+
+    All the messages should be removed from the queue.
+
+1. Click on **Emulator - Default Ports (Key)**
+
+1. In the bottom left, copy and save the **Primary Connection String** value
+
+</details>
+
+#### Task 6: Create a function with Queue storage trigger from Visual Studio
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Start **Visual Studio 2017** and open the *az203functions* solution
+
+1. In the **Solution Explorer**, right-click the *az203functions* project and select **Add** > **New Azure Function...**
+
+1. In the **Add New Item - az203functions** dialog, under **Name**, type *DownloadPictureFromUrl*
+
+1. Click **Add**
+
+1. In the **New Azure Function - DownloadPictureFromUrl** dialog, select **Queue trigger**
+
+1. Under **Connection string setting**, type *az203storageaccountXXXXX_STORAGE*
+
+1. Under **Queue name**, type *profile-picture-url-queue*
+
+1. Click **OK**
+
+    A new file called *DownloadPictureFromUrl.cs* should be created. an error indicates that the **QueueTrigger** attribute could not be found.
+
+1. In the **Solution Explorer**, right-click the *az203functions* project and select**Manage NuGet Packages...**
+
+1. In the **NuGet** tab, click **Browse**
+
+1. Search *Microsoft.Azure.WebJobs.Extensions.Storage*, and select **Microsoft.Azure.WebJobs.Extensions.Storage**
+
+1. Click **Install**, and in the **License Acceptance** dialog, click **I Accept**
+
+1. Close the **NuGet** tab
+    
+    In the *DownloadPictureFromUrl.cs* file, the **QueueTrigger** attribute sould be resolved.
+
+1. In the **Solution Explorer**, open the **local.settings.json**
+
+1. In the **View** menu, open **Cloud Explorer**, expand **(Local)** > **Storage Accounts** > **(Development) (Key)**, then select Properties and copy the Primary Connection String value.
+
+1. In the **local.settings.json** file, under **Values** section, add a setting called *az203storageaccountXXXXX_STORAGE* and paste the **Primary Connection String** copied during the previous task
+
+</details>
+
+#### Task 7: Test the function with Queue storage trigger from Visual Studio
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Click the **Debug** menu, and select **Start Debugging**
+
+    > **Warning!** If an exception is raised, make sure that the time displayed in the console matches the one on your local machine. If not, adjust the time in your computer (usually **(UTC) Coordinated Universal Time**)
+
+1. Go back to **Microsoft Azure Storage Explorer**, select the queue *profile-picture-url-queue* and add a message with the text *testFromLocal*
+
+    The message should be added to the queue
+
+1. Click the **Refresh** button
+
+    The queue should be empty
+
+1. Go back to the Azure functions console
+
+    *C# Queue trigger function processed: testFromLocal* should be displayed in the **Logs**
+
+1. In **Visual Studio**, click the **Debug** menu, and select **Stop Debugging**
+
+</details>
+
+#### Task 8: Create a Blob storage in Azure
 
 <details>
 <summary>Click here to display answers</summary>
 
 1. Step 1
-
+s
 1. Step 2
 
 </details>
 
-#### Task 6: Test the function with Queue storage trigger from Visual Studio
+#### Task 9: Create a function with Blob storage trigger from Azure Portal
 
 <details>
 <summary>Click here to display answers</summary>
@@ -174,7 +287,7 @@
 
 </details>
 
-#### Task 7: Create a Blob storage
+#### Task 10: Test the function with Blob storage trigger from Azure Portal
 
 <details>
 <summary>Click here to display answers</summary>
@@ -185,7 +298,7 @@
 
 </details>
 
-#### Task 8: Create a function with Blob storage trigger from Visual Studio
+#### Task 11: Create a Blob storage locally in Azure Storage Explorer
 
 <details>
 <summary>Click here to display answers</summary>
@@ -196,18 +309,7 @@
 
 </details>
 
-#### Task 9: Test the function with Blob storage trigger from Visual Studio
-
-<details>
-<summary>Click here to display answers</summary>
-
-1. Step 1
-
-1. Step 2
-
-</details>
-
-#### Task 10: Create a function with Blob storage trigger from Azure Portal
+#### Task 12: Create a function with Blob storage trigger from Visual Studio
 
 <details>
 <summary>Click here to display answers</summary>
@@ -218,7 +320,7 @@
 
 </details>
 
-#### Task 11: Test the function with Blob storage trigger from Azure Portal
+#### Task 13: Test the function with Blob storage trigger from Visual Studio
 
 <details>
 <summary>Click here to display answers</summary>
@@ -231,7 +333,7 @@
 
 ## Lab 2: …by timers
 
-#### Task 1: Create a function with Timer trigger from Visual Studio
+#### Task 1: Create a function with Timer trigger from Azure Portal
 
 <details>
 <summary>Click here to display answers</summary>
@@ -242,7 +344,7 @@
 
 </details>
 
-#### Task 2: Test the function with Timer trigger from Visual Studio
+#### Task 2: Test the function with Timer trigger from Azure Portal
 
 <details>
 <summary>Click here to display answers</summary>
@@ -253,7 +355,7 @@
 
 </details>
 
-#### Task 3: Create a function with Timer trigger from Azure Portal
+#### Task 3: Create a function with Timer trigger from Visual Studio
 
 <details>
 <summary>Click here to display answers</summary>
@@ -264,7 +366,7 @@
 
 </details>
 
-#### Task 4: Test the function with Timer trigger from Azure Portal
+#### Task 4: Test the function with Timer trigger from Visual Studio
 
 <details>
 <summary>Click here to display answers</summary>
