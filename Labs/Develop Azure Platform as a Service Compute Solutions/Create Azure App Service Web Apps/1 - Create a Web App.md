@@ -100,6 +100,9 @@
 
 #### Task 5: Delete the Web App, the App Service Plan and the Resource Group
 
+<details>
+<summary>Click here to display answers</summary>
+
 1. On the **App Service** blade, in the **Overview** pane, click **Delete**
 
     > **Note:** You can also delete the Web App from the **App Services** or from the **All resources** blades.
@@ -144,6 +147,9 @@
 </details>
 
 #### Task 2: Open the Cloud Shell on Azure Portal
+
+<details>
+<summary>Click here to display answers</summary>
 
 1. Launch **Cloud Shell** from the top navigation of the Azure portal.
 
