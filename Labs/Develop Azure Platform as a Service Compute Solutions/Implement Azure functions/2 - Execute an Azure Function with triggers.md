@@ -541,9 +541,19 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. Go to **Visual Studio 2017** instance with the *az203functions* solution
 
-1. Step 2
+1. In the **Solution Explorer**, right-click the *az203functions* project and select **Add** > **New Azure Function...**
+
+1. In the **Add New Item - az203functions** dialog, under **Name**, type *LogEveryTenSeconds*
+
+1. Click **Add**
+
+1. In the **New Azure Function - LogEveryTenSeconds** dialog, select **Timer trigger**
+
+1. Under **Schedule**, type *\*/10 \* \* \* \* \**
+
+1. Click **OK**
 
 </details>
 
@@ -552,9 +562,22 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. Click the **Debug** menu, and select **Start Debugging**
 
-1. Step 2
+1. In the **Azure Functions console**, check that a new log is displayed every ten seconds
+
+1. In **Visual Studio**, click the **Debug** menu, and select **Stop Debugging**
+
+</details>
+
+#### Task 6: Delete the function with Timer trigger from Visual Studio
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In **Visual Studio**, in the **Solution Explorer**, right-click the file *LogEveryTenSeconds.cs* and select **Delete**
+
+1. In the confirmation dialog, click **OK**
 
 </details>
 
