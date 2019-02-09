@@ -494,9 +494,19 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In **Azure Portal**, go to the *az203functions-Portal-XXXXX* **Function App** 
 
-1. Step 2
+1. Click **Functions**
+
+1. Click **New function**
+
+1. Select **Timer trigger**
+
+1. In the **New Function** dialog, under **Name**, type *LogEveryTenSeconds*
+
+1. Under **Schedule**, type *\*/10 \* \* \* \* \**
+
+1. Click **Create**
 
 </details>
 
@@ -505,13 +515,28 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In the *LogEveryTenSeconds* function blade, click **Logs**
 
-1. Step 2
+1. Check that the function is triggered every ten seconds
 
 </details>
 
-#### Task 3: Create a function with Timer trigger from Visual Studio
+#### Task 3: Delete the function with Timer trigger from Azure Portal
+
+> **Note:** In consumption plan, the cost is based on execution time and total executions. The schedule of a Timer triggered functions should be planned accordingly. [Click here to consult the Azure Functions pricing](https://azure.microsoft.com/en-us/pricing/details/functions/).
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Under *LogEveryTenSeconds* menu, click **Manage**
+
+1. Click **Delete function**
+
+1. In the confirmation dialog, click **OK**
+
+</details>
+
+#### Task 4: Create a function with Timer trigger from Visual Studio
 
 <details>
 <summary>Click here to display answers</summary>
@@ -522,7 +547,7 @@
 
 </details>
 
-#### Task 4: Test the function with Timer trigger from Visual Studio
+#### Task 5: Test the function with Timer trigger from Visual Studio
 
 <details>
 <summary>Click here to display answers</summary>
