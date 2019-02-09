@@ -54,11 +54,11 @@
 
 1. In the **Queues** blade, click on the button **Queue** in order to add a new queue
 
-1. In the **Add queue** dialog, under **Queue name**, type *function-queue*
+1. In the **Add queue** dialog, under **Queue name**, type *az203-queue-storage*
 
-1. In the **Queues** blade, click *function-queue*
+1. In the **Queues** blade, click *az203-queue-storage*
 
-1. In the *function-queue* blade, click on the button **Add message**
+1. In the *az203-queue-storage* blade, click on the button **Add message**
 
 1. In the **Add message to queue** dialog, under **Message text**, type *Alpha*
 
@@ -66,7 +66,7 @@
 
 1. Repeat the last two steps to add the messages *Beta* and *Omega*
 
-1. In the *function-queue* blade, check that the messages has been added to the queue
+1. In the *az203-queue-storage* blade, check that the messages has been added to the queue
 
 1. Select the message *Beta*
 
@@ -105,7 +105,7 @@
 
 1. In the **New Function** dialog, under **Name**, type *QueueTriggeredFunction*
 
-1. Under **Queue name**, type *function-queue*
+1. Under **Queue name**, type *az203-queue-storage*
 
 1. Under **Storage account connection**, click **new**
 
@@ -122,7 +122,7 @@
 
 1. Open a new tab and navigate to [**Azure Portal**](https://portal.azure.com), in the **Favorites** menu, click **Storage accounts** and select *az203storageaccountXXXXX*
 
-1. Click **Queues** and select *function-queue*
+1. Click **Queues** and select *az203-queue-storage*
 
 1. Go back in the tab with the *QueueTriggeredFunction* blade, click **Run**
 
@@ -155,9 +155,9 @@
 
 1. Right-click **Queues** and select **Create Queue**
 
-1. Type *function-queue*
+1. Type *az203-queue-storage*
 
-1. In the *function-queue* tab, click on the button **Add Message**
+1. In the *az203-queue-storage* tab, click on the button **Add Message**
 
 1. In the **Microsoft Azure Storage Explorer - Add Message** dialog, under **Message text**, type *Alpha*
 
@@ -165,7 +165,7 @@
 
 1. Repeat the last two steps to add the messages *Beta* and *Omega*
 
-1. In the *function-queue* tab, check that the messages has been added to the queue
+1. In the *az203-queue-storage* tab, check that the messages has been added to the queue
 
 1. Select the message *Beta*
 
@@ -206,7 +206,7 @@
 
 1. Under **Connection string setting**, type *az203storageaccountXXXXX_STORAGE*
 
-1. Under **Queue name**, type *function-queue*
+1. Under **Queue name**, type *az203-queue-storage*
 
 1. Click **OK**
 
@@ -241,7 +241,7 @@
 
     > **Warning!** If an exception is raised, make sure that the time displayed in the console matches the one on your local machine. If not, adjust the time in your computer (usually **(UTC) Coordinated Universal Time**)
 
-1. Go back to **Microsoft Azure Storage Explorer**, select the queue *function-queue* and add a message with the text *testFromLocal*
+1. Go back to **Microsoft Azure Storage Explorer**, select the queue *az203-queue-storage* and add a message with the text *testFromLocal*
 
     The message should be added to the queue
 
@@ -274,15 +274,15 @@
 
 1. In the **Blobs** blade, click on the button **Container** in order to add a new blob storage
 
-1. In the **New container** dialog, under **Name**, type *pictures*
+1. In the **New container** dialog, under **Name**, type *az203-blob-storage*
 
 1. Under **Public access level**, select **Blob (anonymous read access for blobs only)**
 
 1. Click **OK**
 
-1. In the **Blobs** blade, click *pictures*
+1. In the **Blobs** blade, click *az203-blob-storage*
 
-1. In the *pictures* blade, click on the button **Upload**
+1. In the *az203-blob-storage* blade, click on the button **Upload**
 
 1. In the **Upload blob** dialog, under **Files**, click **Select a file**
 
@@ -298,7 +298,7 @@
 
 1. Repeat the last six steps to upload the files *Beta* and *Omega*
 
-1. In the *pictures* blade, check that the files has been uploaded in the storage
+1. In the *az203-blob-storage* blade, check that the files has been uploaded in the storage
 
 1. Select the file *Beta.txt*
 
@@ -310,9 +310,9 @@
 
 1. Close the tab
 
-1. In **Azure Portal**, go back to the *pictures* blade
+1. In **Azure Portal**, go back to the *az203-blob-storage* blade
 
-1. In the *pictures* blade, click on the button **Upload**
+1. In the *az203-blob-storage* blade, click on the button **Upload**
 
 1. In the **Upload blob** dialog, under **Files**, click **Select a file**
 
@@ -326,7 +326,7 @@
 
 1. Click **Upload**
 
-1. In the *pictures* blade, check that the picture has been uploaded in the storage
+1. In the *az203-blob-storage* blade, check that the picture has been uploaded in the storage
 
 1. Select the file *avanade-logo\[1].svg*
 
@@ -361,7 +361,7 @@
 
 1. In the **New Function** dialog, under **Name**, type *BlobTriggeredFunction*
 
-1. Under **Path**, type *pictures/{name}*
+1. Under **Path**, type *az203-blob-storage/{name}*
 
 1. Under **Storage account connection**, click **new**
 
@@ -378,7 +378,7 @@
 
 1. Open a new tab and navigate to [**Azure Portal**](https://portal.azure.com), in the **Favorites** menu, click **Storage accounts** and select *az203storageaccountXXXXX*
 
-1. Click **Blobs** and select *pictures*
+1. Click **Blobs** and select *az203-blob-storage*
 
 1. Go back in the tab with the *BlobTriggeredFunction* blade, click **Logs**
 
@@ -413,9 +413,9 @@
 
 1. Right-click **Blob Containers** and select **Create Blob Container**
 
-1. Type *pictures*
+1. Type *az203-blob-storage*
 
-1. In the *pictures* tab, click on the button **Upload**, then select **Upload Files...**
+1. In the *az203-blob-storage* tab, click on the button **Upload**, then select **Upload Files...**
 
 1. In the **Microsoft Azure Storage Explorer - Upload Files** dialog, under **Files**, click **No files selected**
 
@@ -423,7 +423,7 @@
 
 1. Click **Upload**
 
-1. In the *pictures* tab, check that the files has been uploaded in the storage
+1. In the *az203-blob-storage* tab, check that the files has been uploaded in the storage
 
 1. Select the file *Beta*
 
@@ -462,7 +462,7 @@
 
 1. Under **Connection string setting**, type *az203storageaccountXXXXX_STORAGE*
 
-1. Under **Path**, type *pictures*
+1. Under **Path**, type *az203-blob-storage*
 
 1. Click **OK**
 
@@ -475,7 +475,7 @@
 
 1. Click the **Debug** menu, and select **Start Debugging**
 
-1. Go back to **Microsoft Azure Storage Explorer**, select the **Blob Container** *pictures* and upload the picture located in *https://www.avanade.com/~/media/logo/avanade-logo.svg*
+1. Go back to **Microsoft Azure Storage Explorer**, select the **Blob Container** *az203-blob-storage* and upload the picture located in *https://www.avanade.com/~/media/logo/avanade-logo.svg*
 
     The file should be added to the storage.
 
