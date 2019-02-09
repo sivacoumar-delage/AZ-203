@@ -2,7 +2,7 @@
 
 ## Lab 1: …by using data operations
 
-#### Task 1: Create two Function Apps (one for functions created from Azure Portal, one for functions created and published from Visual Studio)
+#### Task 1: Create a Function Apps named az203functions-Portal-XXXXX
 
 <details>
 <summary>Click here to display answers</summary>
@@ -38,12 +38,6 @@
 1. Under **Application Insights**, select **Disabled**
 
 1. Click **Create**
-
-1. Repeats the same steps, but create a **Function App** called *az203functions-VisualStudio-XXXXX*
-
-1. Go to the *az203functions-VisualStudio-XXXXX* **Function App** 
-
-1. Click on the button **Get publish profile** and download the **.PublishSettings** file
 
 </details>
 
@@ -111,8 +105,6 @@
 
 1. In the **New Function** dialog, under **Name**, type *DownloadPictureFromUrl*
 
-1. Click **Create**
-
 1. Under **Queue name**, type *profile-picture-url-queue*
 
 1. Under **Storage account connection**, click **new**
@@ -132,7 +124,7 @@
 
 1. Click **Queues** and select *profile-picture-url-queue*
 
-1. Go back in the tab, in the *DownloadPictureFromUrl* blade, click **Run**
+1. Go back in the tab with the *DownloadPictureFromUrl* blade, click **Run**
 
     The **Request body** displays the message sent to the queue. The **Logs** displays the information with the message content.
 
@@ -140,13 +132,13 @@
 
     The **Logs** should display "C# Queue trigger function processed: testfromFunctionApp"
 
-1. Go to the other tab, and click **Add message**
+1. Go to the other tab with the **Queue Storage** blade, and click **Add message**
 
 1. In the **Add message to queue** dialog, under **Message text**, type *testFromQueue*, and click **OK**
 
 1. Click **Refresh**
 
-1. Go back to the tab, in the *DownloadPictureFromUrl* blade, check the **Logs**
+1. Go back to the tab with the *DownloadPictureFromUrl* blade, check the **Logs**
 
     The **Logs** should display "C# Queue trigger function processed: testFromQueue"
 
@@ -270,9 +262,87 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
-s
-1. Step 2
+1. Create three text files named *Alpha*, *Beta*, and *Omega* on your computer
+
+1. Open each file, and type the name of the file in the content
+
+1. In [**Azure Portal**](https://portal.azure.com), in the **Favorites** menu, click **Storage accounts**
+
+1. Click *az203storageaccountXXXXX* created in a previous lab
+
+1. In the **Storage account** blade, click **Blobs** in the menu
+
+1. In the **Blobs** blade, click on the button **Container** in order to add a new blob storage
+
+1. In the **New container** dialog, under **Name**, type *raw-profile-pictures*
+
+1. Under **Public access level**, select **Blob (anonymous read access for blobs only)**
+
+1. Click **OK**
+
+1. In the **Blobs** blade, click *raw-profile-pictures*
+
+1. In the *raw-profile-pictures* blade, click on the button **Upload**
+
+1. In the **Upload blob** dialog, under **Files**, click **Select a file**
+
+1. Browse and select the first text file *Alpha*
+
+1. Expand **Advanced**
+
+1. Under **Blob type**, select **Block blob**
+
+    > **Note:** [Click here to consult the documentation to understand Block Blobs, Append Blobs, and Page Blobs](https://docs.microsoft.com/en-us/rest/api/storageservices/understanding-block-blobs--append-blobs--and-page-blobs)
+
+1. Click **Upload**
+
+1. Repeat the last six steps to upload the files Beta* and *Omega*
+
+1. In the *raw-profile-pictures* blade, check that the files has been uploaded in the storage
+
+1. Select the file *Beta.txt*
+
+1. Copy the **URL** of the file
+
+1. In the web browser, open a new tab, paste the **URL** and navigate to the blob
+
+    The content of the text file should be displayed: *Beta*.
+
+1. Close the tab
+
+1. In **Azure Portal**, go back to the *raw-profile-pictures* blade
+
+1. In the *raw-profile-pictures* blade, click on the button **Upload**
+
+1. In the **Upload blob** dialog, under **Files**, click **Select a file**
+
+1. In **File name**, type *https://www.avanade.com/~/media/logo/avanade-logo.svg* and click **Open**
+
+1. Expand **Advanced**
+
+1. Under **Blob type**, select **Block blob**
+
+    > **Note:** [Click here to consult the documentation to understand Block Blobs, Append Blobs, and Page Blobs](https://docs.microsoft.com/en-us/rest/api/storageservices/understanding-block-blobs--append-blobs--and-page-blobs)
+
+1. Click **Upload**
+
+1. In the *raw-profile-pictures* blade, check that the picture has been uploaded in the storage
+
+1. Select the file *avanade-logo\[1].svg*
+
+1. Copy the **URL** of the file
+
+1. In the web browser, open a new tab, paste the **URL** and navigate to the blob
+
+    The picture should be displayed.
+
+1. Close the tab
+
+1. Select all files
+
+1. Click **Delete**
+
+1. In the **Delete blob(s)** dialog, click **OK**
 
 </details>
 
@@ -281,9 +351,23 @@ s
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Go to the *az203functions-Portal-XXXXX* **Function App** 
 
-1. Step 2
+1. Click **Functions**
+
+1. Click **New function**
+
+1. Select **Azure Blob Storage trigger**
+
+1. In the **New Function** dialog, under **Name**, type *ResizePicture*
+
+1. Under **Path**, type *raw-profile-pictures/{name}*
+
+1. Under **Storage account connection**, click **new**
+
+1. In the **Storage Account** blade, select *az203storageaccountXXXXX*
+
+1. Click **Create**
 
 </details>
 
@@ -292,9 +376,29 @@ s
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. Open a new tab and navigate to [**Azure Portal**](https://portal.azure.com), in the **Favorites** menu, click **Storage accounts** and select *az203storageaccountXXXXX*
 
-1. Step 2
+1. Click **Blobs** and select *raw-profile-pictures*
+
+1. Go back in the tab with the *ResizePicture* blade, click **Logs**
+
+1. Go to the tab with the **Blob Storage** blade, click on the button **Upload**
+
+1. In the **Upload blob** dialog, under **Files**, click **Select a file**
+
+1. In **File name**, type *https://www.avanade.com/~/media/logo/avanade-logo.svg* and click **Open**
+
+1. Click **Upload**
+
+1. Close the **Upload blob** dialog
+
+1. Go back to the tab with the *ResizePicture* blade, check the **Logs**
+
+    The **Logs** should display "C# Blob trigger function Processed blob Name:avanade-logo[1].svg"
+
+1. Go to the tab with the **Blob Storage** blade, click on the button **Refresh**
+
+    The picture should remain in the storage.
 
 </details>
 
