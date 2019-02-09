@@ -1,11 +1,48 @@
 # Module_Name
 
-Normal Text. 
+### Text formatting
+
+Normal Text.
+
 **Text in bold**
+
 *Text in italic*
+
 `Button`
 
 [Avanade](https://www.avanade.com/en)
+
+### List
+
+1. Alpha
+1. Beta
+    1. b
+    1. bb
+    1. bbb
+1. Omega
+
+- Alpha
+- Beta
+    - b
+    - bb
+    - bbb
+- Omega
+
+* Alpha
+* Beta
+    * b
+    * bb
+    * bbb
+* Omega
+
+- [x] Alpha
+- [ ] Beta
+    - [x] b
+    - [ ] bb
+    - [ ] bbb
+- [ ] Omega
+
+### Blocks
 
 > **Note:** Information... 
 
@@ -16,6 +53,8 @@ Normal Text.
 > Beta
 > <br />
 > Omega
+
+### Code syntax highlight
 
 ```csharp
 private void main()
@@ -123,6 +162,8 @@ WHERE Company = 'Avanade';
 ```text
 Hello world from a text file
 ```
+
+### Images
 
 ![Avanade Logo](https://www.avanade.com/~/media/logo/avanade-logo.svg)
 
