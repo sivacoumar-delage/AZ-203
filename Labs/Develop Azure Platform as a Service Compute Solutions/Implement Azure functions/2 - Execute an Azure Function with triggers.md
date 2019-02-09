@@ -583,25 +583,81 @@
 
 ## Lab 3: …by webhooks
 
-#### Task 1: Create and configure a GitHub webhook
+#### Task 1: Create a function with Generic webhook trigger from Azure Portal
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In **Azure Portal**, go to the *az203functions-Portal-XXXXX* **Function App** 
 
-1. Step 2
+1. Click **Functions**
+
+1. Click **New function**
+
+1. Select **HTTP trigger**
+
+1. In the **New Function** dialog, under **Name**, type *GitHubTriggeredFunction*
+
+1. Under **Authorization level**, select **Function**
+
+1. Click **Create**
+
+1. In the *GitHubTriggeredFunction* blade, 
+
+1. Replace the content of the run function with the following code:
+
+    log.LogInformation("C# HTTP trigger function processed a request.");<br />
+    <br />
+    string requestBody = await new StreamReader(req.Body).ReadToEndAsync();<br />
+    dynamic data = JsonConvert.DeserializeObject(requestBody);<br />
+    string issueName = $"The issue {data?.issue?.title} has been created in GitHub.";<br />
+    <br />
+    string result = issueName ?? "Hello GitHub!";<br />
+    log.LogInformation(result);<br />
+    return (ActionResult)new OkObjectResult(result);<br />
+
+1. Click **Save**
+
+1. Click **Get function URL**
+
+1. In the **Get function URL** dialog, click **Copy** and save the **URL**
 
 </details>
 
-#### Task 2: Create a function with GitHub webhook trigger from Azure Portal
+#### Task 2: Create and configure a GitHub webhook
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In a web browser, open a new tab and go to [GitHub](https://github.com/)
 
-1. Step 2
+1. Create an account or sign-in
+
+1. Click **Repositories**
+
+1. Click **New**
+
+1. Under **Repository name**, type *az203webhook*
+
+1. Select **Private**
+
+1. Click **Create repository**
+
+1. In the repository page, click **Settings**
+
+1. In the **Settings** page, click the menu **Webhooks**
+
+1. In the **Webhooks** page, click **Add webhook**
+
+1. Under **Payload URL**, paste the **URL** copied earlier 
+
+1. Under **Content type**, select **application/json**
+
+1. Under **Which events would you like to trigger this webhook?**, select **Send me everything**
+
+1. Click **Add webhook**
+
+1. Check that the last delivery was successful
 
 </details>
 
@@ -610,8 +666,58 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In **GitHub**, right-click the link **Issues** and open a new tab
 
-1. Step 2
+1. In the **Issues** page, click **New issue**
+
+1. In the **Title** field, type *Alpha*
+
+1. Click **Submit new issue**
+
+1. Click **New issue**
+
+1. In the **Title** field, type *Beta*
+
+1. Click **Submit new issue**
+
+1. Click **New issue**
+
+1. In the **Title** field, type *Omega*
+
+1. Click **Submit new issue**
+
+1. Close the **Issue** tab
+
+1. Refresh the **Webhook page** and check the **Recent Deliveries**
+
+1. In **Azure Portal**, in the function blade, click **Logs** and check that the function is trigerred
+
+    The **Logs** should display:<br />
+    \[Information] The issue Alpha has been created in GitHub. <br />
+    \[Information] The issue Beta has been created in GitHub. <br />
+    \[Information] The issue Omega has been created in GitHub. <br />
+
+</details>
+
+#### Task 4: Clean-up by deleting the az203webhook GitHub repository and the GitHubTriggeredFunction Azure Function
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In **GitHub**, go to the *az203webhook* repository
+
+1. Click **Settings**
+
+1. Click **Delete this repository**
+
+1. In the **Are you absolutely sure?** dialog, type the name of the repository and click **I understand the consequences, delete this repository**
+
+    > **Warning!** Be careful and check that you have selcted the proper repository as this operation can not be reversed.
+
+1. In **Azure Portal**, under *GitHubTriggeredFunction* menu, click **Manage**
+
+1. Click **Delete function**
+
+1. In the confirmation dialog, click **OK**
 
 </details>
