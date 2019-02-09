@@ -165,7 +165,7 @@
 
 1. Repeat the last two steps to add the messages *Beta* and *Omega*
 
-1. In the *profile-picture-url-queue* blade, check that the messages has been added to the queue
+1. In the *profile-picture-url-queue* tab, check that the messages has been added to the queue
 
 1. Select the message *Beta*
 
@@ -296,7 +296,7 @@
 
 1. Click **Upload**
 
-1. Repeat the last six steps to upload the files Beta* and *Omega*
+1. Repeat the last six steps to upload the files *Beta* and *Omega*
 
 1. In the *raw-profile-pictures* blade, check that the files has been uploaded in the storage
 
@@ -407,9 +407,41 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Start **Microsoft Azure Storage Explorer**
 
-1. Step 2
+1. Expand **Local & Attached** > **Storage Accounts** > **Emulator - Default Ports (Key)**
+
+1. Right-click **Blob Containers** and select **Create Blob Container**
+
+1. Type *raw-profile-pictures*
+
+1. In the *raw-profile-pictures* tab, click on the button **Upload**, then select **Upload Files...**
+
+1. In the **Microsoft Azure Storage Explorer - Upload Files** dialog, under **Files**, click **No files selected**
+
+1. Browse and select the three files *Alpha*, *Beta* and *Omega*
+
+1. Click **Upload**
+
+1. In the *raw-profile-pictures* tab, check that the files has been uploaded in the storage
+
+1. Select the file *Beta*
+
+1. Click on the button **Open**
+
+    The file will be opened.
+
+1. Close the file
+
+1. Select all files in the **Blob storage**
+
+1. Click on the button **More** > **Delete**
+
+1. In the pop-up dialog, click **Delete**
+
+1. In the notification on the top, click **Yes** in order to refresh the storage view
+
+    All the files should be deleted from the storage.
 
 </details>
 
@@ -418,9 +450,21 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Go to **Visual Studio 2017** instance with the *az203functions* solution
 
-1. Step 2
+1. In the **Solution Explorer**, right-click the *az203functions* project and select **Add** > **New Azure Function...**
+
+1. In the **Add New Item - az203functions** dialog, under **Name**, type *ResizePicture*
+
+1. Click **Add**
+
+1. In the **New Azure Function - ResizePicture** dialog, select **Blob trigger**
+
+1. Under **Connection string setting**, type *az203storageaccountXXXXX_STORAGE*
+
+1. Under **Path**, type *raw-profile-pictures*
+
+1. Click **OK**
 
 </details>
 
@@ -429,9 +473,17 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. Click the **Debug** menu, and select **Start Debugging**
 
-1. Step 2
+1. Go back to **Microsoft Azure Storage Explorer**, select the **Blob Container** *raw-profile-pictures* and upload the picture located in *https://www.avanade.com/~/media/logo/avanade-logo.svg*
+
+    The file should be added to the storage.
+
+1. Go back to the Azure functions console
+
+    *C# Blob trigger function Processed blob<br />Name:avanade-logo[1].svg* should be displayed in the **Logs**
+
+1. In **Visual Studio**, click the **Debug** menu, and select **Stop Debugging**
 
 </details>
 
