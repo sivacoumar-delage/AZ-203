@@ -3,6 +3,7 @@
 Normal Text. 
 **Text in bold**
 *Text in italic*
+`Button`
 
 [Avanade](https://www.avanade.com/en)
 
