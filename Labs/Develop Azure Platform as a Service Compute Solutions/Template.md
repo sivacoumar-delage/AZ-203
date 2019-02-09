@@ -171,7 +171,7 @@ Hello world from a text file
 
 ## Lab 1: Lab_Name
 
-:clock1: 5 minutes
+:stopwatch: 5 minutes
 
 #### Task 1: Task_Name
 
@@ -197,7 +197,7 @@ Hello world from a text file
 
 ## Lab 2: Lab_Name
 
-:clock2: &#9201; &#128337; 10 minutes
+:stopwatch: 10 minutes
 
 #### Task 1: Task_Name
 
