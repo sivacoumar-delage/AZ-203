@@ -197,7 +197,7 @@ Hello world from a text file
 
 ## Lab 2: Lab_Name
 
-:clock2: 10 minutes
+:clock2: &#9201; &#128337; 10 minutes
 
 #### Task 1: Task_Name
 
