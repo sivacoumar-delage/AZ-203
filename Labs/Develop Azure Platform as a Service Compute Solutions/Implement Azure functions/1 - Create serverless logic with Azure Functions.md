@@ -41,7 +41,7 @@
 
 </details>
 
-#### Task 2: Create an HTTP triggered function named SubmitProfilePictureUrl from Azure Portal
+#### Task 2: Create an HTTP triggered function named httpTriggeredFunction from Azure Portal
 
 <details>
 <summary>Click here to display answers</summary>
@@ -56,7 +56,7 @@
 
 1. Click **HTTP trigger**
 
-1. In the **HTTP trigger** pane, under **Name**, type *SubmitProfilePictureUrl*
+1. In the **HTTP trigger** pane, under **Name**, type *httpTriggeredFunction*
 
 1. Under **Authorization Level**, leave the default selection to **Function**
 
@@ -74,7 +74,7 @@
 
 1. In the function blade, under **run.csx** pane, edit the log.LogInformation instruction at line 10 with the following code:
 
-    log.LogInformation("SubmitProfilePictureUrl function processed a request.");
+    log.LogInformation("httpTriggeredFunction function processed a request.");
 
 1. Click **Save**
 
@@ -203,7 +203,7 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. In **Azure Portal**, in the function blade, under the *SubmitProfilePictureUrl* function, click **Monitor**
+1. In **Azure Portal**, in the function blade, under the *httpTriggeredFunction* function, click **Monitor**
 
     The list of calls will be displayed
 
@@ -232,7 +232,7 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. In **Azure Portal**, in the function blade, click the *SubmitProfilePictureUrl* function
+1. In **Azure Portal**, in the function blade, click the *httpTriggeredFunction* function
 
 1. Under **run.csx**, add the following instruction after the declaration and assignation of the variable *name*:
 
@@ -295,19 +295,19 @@
 
 1. Click **OK**
 
-1. In the **Solution Explorer**, rename the file *Function1.cs* by *SubmitProfilePictureUrl*
+1. In the **Solution Explorer**, rename the file *Function1.cs* by *httpTriggeredFunction*
 
 1. A pop-up dialog will request if you would like to perform a rename in this project of all references to the code element 'Function1'? Click **Yes**
 
     > **Note:** This refactoring will not update the function name in the decoration
 
-1. In the *SubmitProfilePictureUrl* class, update the function name in the decoration with the class name
+1. In the *httpTriggeredFunction* class, update the function name in the decoration with the class name
 
-    \[FunctionName("SubmitProfilePictureUrl")]
+    \[FunctionName("httpTriggeredFunction")]
 
 1. Update the LogInformation message and type the function name
 
-    log.LogInformation("SubmitProfilePictureUrl from Visual Studio");
+    log.LogInformation("httpTriggeredFunction from Visual Studio");
 
 1. Add the following instruction after the declaration and assignation of the variable name:
 
@@ -326,7 +326,7 @@
 
 1. In **Visual Studio**, click the **Debug** menu and select **Start Debugging**
 
-1. A console application will open, wait until the URL of the *SubmitProfilePictureUrl* function is displayed
+1. A console application will open, wait until the URL of the *httpTriggeredFunction* function is displayed
 
 1. Copy the URL
 
@@ -356,7 +356,7 @@
 
 1. Back in the console application, check the logs
 
-    *\[dd/mm/yyyy hh:mm:ss] SubmitProfilePictureUrl from Visual Studio <br />\[dd/mm/yyyy hh:mm:ss] Request Query:
+    *\[dd/mm/yyyy hh:mm:ss] httpTriggeredFunction from Visual Studio <br />\[dd/mm/yyyy hh:mm:ss] Request Query:
 \[dd/mm/yyyy hh:mm:ss] Request Body: {<br />        name: "in local from Visual Studio and Postman"}*<br />should appear in the logs.
 
 1. In **Visual Studio**, click the **Debug** menu and select **Stop Debugging**
@@ -381,7 +381,7 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. In **Visual Studio**, update the **AuthorizationLevel** from **Anonymous** to **Function** in the *Run* method of the class *SubmitProfilePictureUrl*
+1. In **Visual Studio**, update the **AuthorizationLevel** from **Anonymous** to **Function** in the *Run* method of the class *httpTriggeredFunction*
 
 1. Click the **Build** menu, and select **Publish az203functions**
 
@@ -400,7 +400,7 @@
 <details>
 <summary>Click here to display answers</summary>
 
-1. In **Azure Portal**, in the function blade, select the function *SubmitProfilePictureUrl*
+1. In **Azure Portal**, in the function blade, select the function *httpTriggeredFunction*
 
     **Note:** As the function has been deployed from Visual Studio, the code is not editable.
 
