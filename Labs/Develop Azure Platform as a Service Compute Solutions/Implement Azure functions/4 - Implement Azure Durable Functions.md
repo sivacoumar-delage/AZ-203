@@ -390,29 +390,142 @@ The function End should be called at the end of the orchestration and log *End*.
 
 1. Check the **Logs**
 
+1. Stop debugging
+
 </details>
 
 ## Lab 2: Implement a Fan-in / fan-out pattern
 
-#### Task 1: Task_Name
+#### Task 1: Create a new Azure Durables Functions Orchestration called FanInFanOutPattern
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In the **Solution Explorer**, right-click the project and select **Add** > **New Azure Function...**
 
-1. Step 2
+1. In the **Add New Item** dialog, select **Azure Function**
+
+1. Next to **Name**, type *FanInFanOutPattern*
+
+1. Click **OK**
+
+1. In the **New Azure Function - FanInFanOutPattern** dialog, select **Durable Functions Orchestration** and click **OK**
 
 </details>
 
-#### Task 2: Task_Name
+#### Task 2: Replace the LogInformation by LogWarning in FanInFanOutPattern_Hello function
+
+#### Task 3: Create a sub-orchestration taking a list of strings and calling for each string the FanInFanOutPattern_Hello activity function
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. Copy the method **RunOrchestrator** and rename the duplicate by **FanInFanOutPattern_SubOrchestration**
 
-1. Step 2
+1. In the content of the **FanInFanOutPattern_SubOrchestration** method
+
+    You should have the following code:
+
+    ```csharp
+    [FunctionName("FanInFanOutPattern_SubOrchestration")]
+    public static async Task<List<string>> FanInFanOutPattern_SubOrchestration(
+        [OrchestrationTrigger] DurableOrchestrationContext context)
+    {
+        var outputs = new List<string>();
+
+        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", "Tokyo"));
+        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", "Seattle"));
+        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", "London"));
+
+        return outputs;
+    }
+    ```
+
+1. In the beginning of the method, split the input string with a semicolon delimiter into a list of strings
+
+    ```csharp
+    string input = context.GetInput<string>();
+    var items = input.Split(";");
+    ```
+
+1. Replace the three calls with a foreach, and call the **FanInFanOutPattern_Hello** function for each item of the list
+
+    ```csharp
+    foreach (string item in items)
+        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", item));
+    ```
+
+1. In the **RunOrchestrator** method, remove the calls to the **FanInFanOutPattern_Hello** function and add the following instructions:
+
+    ```csharp
+    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "Tokyo;Seattle;London");
+    ```
+
+1. Start debugging to test, and trigger the FanInFanOutPattern function with **Postman**
+
+1. Check the **Logs**
+
+1. Stop debugging
+
+</details>
+
+#### Task 4: Add more calls to the suborchestration function
+
+- First call should pass the argument "Start;Start;Start"
+- Second call should pass the argument "1a;1b;1c"
+- Third call should pass the argument "2a;2b;2c;2d;2e;2f;2g;2h;2i"
+- Fourth call should pass the argument "3a"
+- Fifth call should pass the argument "End;End;End"
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the RunORchestrator method, replace the call by:
+
+    ```csharp
+    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "Start;Start;Start");
+
+    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "1a;1b;1c");
+    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "2a;2b;2c;2d;2e;2f;2g;2h;2i");
+    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "3a");
+
+    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "End;End;End");
+    ```
+
+</details>
+
+#### Task 5: Parallelize the second to fourth calls included
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Create a Task array of length three before the second call
+
+    ```csharp
+    var tasks = new Task[3];
+    ```
+
+1. Replace the calls with:
+
+    ```csharp
+    tasks[0] = context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "1a;1b;1c");
+    tasks[1] = context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "2a;2b;2c;2d;2e;2f;2g;2h;2i");
+    tasks[2] = context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "3a");
+    ```
+
+1. Wait for all tasks after the fourth call and before the fifth call
+
+    ```csharp
+    await Task.WhenAll(tasks);
+    ```
+
+1. Start debugging to test, and trigger the FanInFanOutPattern function with **Postman**
+
+1. Check the **Logs**
+
+    The call with *3a* should be logged before the completion of the call *2i*. 
+
+1. Stop debugging
 
 </details>
 
