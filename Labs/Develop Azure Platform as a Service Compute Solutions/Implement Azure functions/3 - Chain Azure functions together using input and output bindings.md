@@ -563,8 +563,10 @@ Create a HTTP triggered function called *ReadHttpRequest* expecting the followin
 
 ```json
 {
-    "userId": "httpTrigger@az203.azure",
-    "profilePictureUrl": "https://www.avanade.com/~/media/images/content/background/thinking/technology-vision-2016.jpg"
+    "UserName": "HttpTrigger",
+    "BirthdayDate": "01/02/2003",
+    "ProfilePictureUrl": "https://www.avanade.com/~/media/images/content/background/thinking/technology-vision-2016.jpg",
+    "IsGuest": false
 }
 ```
 
@@ -573,33 +575,275 @@ The function should log each attribute.
 <details>
 <summary>Click here to display answers</summary>
 
-1. Go to the *az203functions-Portal-XXXXX* **Function App** 
+1. Go to the *az203functions-InputOutput-XXXXX* **Function App** 
 
-1. Expand the *DownloadPictureFromUrl* function, click **Integrate**
+1. Create a HTTP triggered function called *ReadHttpRequest*
 
-1. 
+1. In the *ReadHttpRequest* function pane, click **Test**
+
+1. Under **Request body**, type the following:
+
+    ```json
+    {
+        "UserName": "HttpTrigger",
+        "BirthdayDate": "01/02/2003",
+        "ProfilePictureUrl": "https://www.avanade.com/~/media/images/content/background/thinking/technology-vision-2016.jpg"
+    }
+    ```
+
+1. Click **Run**
+
+    An **400 Bad Request** error should be displayed.
+
+1. In **run.csx**, add the following class after the **Run** method:
+
+    ```csharp
+    public class User
+    {
+        public string UserName {get; set;}
+        public string BirthdayDate {get; set;}
+        public string ProfilePictureUrl {get; set;}
+        
+        private bool _isGuest = true;
+        public bool IsGuest 
+        {
+            get
+            {
+                return _isGuest;
+            }
+            set
+            {
+                _isGuest = value;
+            }
+        }
+    }
+    ```
+
+1. In **run.csx**, replace with the following code the content of the **Run** method:
+
+    ```csharp
+    log.LogInformation("C# HTTP trigger function processed a request.");
+
+
+    string userName = req.Query["UserName"];
+    DateTime now = DateTime.UtcNow;
+    DateTime birthdayDate = now;
+    if(!string.IsNullOrEmpty(req.Query["BirthdayDate"]))
+        DateTime.TryParse(req.Query["BirthdayDate"], out birthdayDate);
+    string profilePictureUrl = req.Query["ProfilePictureUrl"];
+
+    string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+    User user = JsonConvert.DeserializeObject<User>(requestBody);
+    userName = userName ?? user?.UserName;
+    if(!string.IsNullOrEmpty(user?.BirthdayDate))
+        DateTime.TryParse(user?.BirthdayDate, out birthdayDate);
+    profilePictureUrl = profilePictureUrl ?? user?.ProfilePictureUrl;
+
+
+    log.LogInformation($"UserName: {userName}");
+    if(birthdayDate != now)
+        log.LogInformation($"BirthdayDate: {birthdayDate.ToShortDateString()}");
+    log.LogInformation($"ProfilePictureUrl: {profilePictureUrl}");
+    log.LogInformation($"IsGuest: {user?.IsGuest.ToString()}");
+
+    return userName != null
+        ? (ActionResult)new OkObjectResult($"Hello, {userName}")
+        : new BadRequestObjectResult("Please pass a user on the query string or in the request body");
+    ```
+1. Click **Save and Run**
+
+1. Under **Request body**, type the following:
+
+    ```json
+    {
+        "UserName": "HttpTrigger",
+        "BirthdayDate": "01/02/2003",
+        "ProfilePictureUrl": "https://www.avanade.com/~/media/images/content/background/thinking/technology-vision-2016.jpg",
+        "IsGuest": false
+    }
+    ```
+
+1. Click **Run**
 
 </details>
 
-#### Task 2: ...from a Queue trigger
+#### Task 2: ...from a Blob storage
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. Create a **Queue** called *az203-read-blob*
 
-1. Step 2
+1. Go to the *az203functions-InputOutput-XXXXX* **Function App** 
+
+1. Create a queue triggered function called *ReadBlob* based on *az203-read-blob* **Queue**
+
+1. In the *ReadBlob* function pane, click **Integrate**
+
+1. Under **Inputs**, click **New Input**
+
+1. Select **Azure Blob Storage**
+
+1. Click **Select**
+
+1. Under **Storage account connection**, select *az203storageaccountXXXXX_STORAGE*
+
+1. Under **Path**, type *az203blobs/{queueTrigger}*
+
+1. Click **Save**
+
+1. Click *ReadBlob*
+
+1. Click **View files**, then click on **function.json** and check the JSON bindings:
+
+    ```json
+    {
+    "bindings": [
+        {
+        "name": "myQueueItem",
+        "type": "queueTrigger",
+        "direction": "in",
+        "queueName": "az203-read-blob",
+        "connection": "az203storageaccountXXXXX_STORAGE"
+        },
+        {
+        "type": "blob",
+        "name": "inputBlob",
+        "path": "az203blobs/{queueTrigger}",
+        "connection": "az203storageaccountXXXXX_STORAGE",
+        "direction": "in"
+        }
+    ]
+    }
+    ```
+
+    > **Note:** queueTrigger is included in the **Blob path** in order to get the blob filename from the **Queue**.
+
+1. Under **run.csx**, replace the **Run** method signature with the following code:
+
+    ```csharp
+    public static void Run(string myQueueItem, string inputBlob, ILogger log)
+    ```
+
+1. Under **run.csx**, in the **Run** method add the following log instruction:
+
+    ```csharp
+    log.LogInformation($"Blob content: {inputBlob}");
+    ```
+
+1. Go to the *az203storageaccountXXXXX*, and select the *az203blobs* **Blob Storage**
+
+1. Copy the name of a file containing simple text
+
+1. Go back to the *ReadBlob* function, and paste the file name in the **Request Body**
+
+1. Click **Run**
+
+    The content of the blob should be displayed in the **Logs**
 
 </details>
 
-#### Task 3: ...from a Blob trigger
+#### Task 3: ...from a Table storage
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Create a **Queue** called *az203-read-table*
 
-1. Step 2
+1. Go to the *az203functions-InputOutput-XXXXX* **Function App** 
+
+1. Create a queue triggered function called *ReadTable* based on *az203-read-table* **Queue**
+
+1. In the *ReadTable* function pane, click **Integrate**
+
+1. Under **Inputs**, click **New Input**
+
+1. Select **Azure Table Storage**
+
+1. Click **Select**
+
+1. Under **Storage account connection**, select *az203storageaccountXXXXX_STORAGE*
+
+1. Under **Table name**, type *az203table*
+
+1. Under **Row key (optional)**, type *{queueTrigger}*
+
+1. Click **Save**
+
+1. Click *ReadTable*
+
+1. Click **View files**, then click on **function.json** and check the JSON bindings:
+
+    ```json
+    {
+    "bindings": [
+        {
+        "name": "myQueueItem",
+        "type": "queueTrigger",
+        "direction": "in",
+        "queueName": "az203-read-table",
+        "connection": "az203storageaccountXXXXX_STORAGE"
+        },
+        {
+        "type": "table",
+        "name": "inputTable",
+        "tableName": "az203table",
+        "rowKey": "{queueTrigger}",
+        "take": 50,
+        "connection": "az203storageaccountXXXXX_STORAGE",
+        "direction": "in"
+        }
+    ]
+    }
+    ```
+
+    > **Note:** queueTrigger is included in the **Row Key** in order to get one row.
+
+1. In the **run.csx**, add the following class after the method Run:
+
+    ```csharp
+    public class User
+    {
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
+        public string UserName { get; set; }
+        public DateTime UserCreationDate { get; set; }
+    }
+    ```
+1. Add the following import module and using statements:
+
+    ```csharp
+    #r "Microsoft.WindowsAzure.Storage"
+    using Microsoft.WindowsAzure.Storage.Table;
+    ```
+
+1. Replace the Run signature by the following:
+
+    ```csharp
+    public static void Run(string myQueueItem, CloudTable inputTable, ILogger log)
+    ```
+
+1. Replace the content of the **Run** method with the following code:
+
+    ```csharp
+    TableOperation operation = TableOperation.Retrieve<User>(myQueueItem, myQueueItem);
+    TableResult result = inputTable.ExecuteAsync(operation).Result;
+    User user = (User)result.Result;
+    
+    if(user != null)
+    {
+        log.LogInformation($"UserName: {user.UserName}");
+        log.LogInformation($"UserCreationDate: {user.UserCreationDate}");
+    }
+    else
+    {
+        log.LogInformation($"User {myQueueItem} doesn't exist.");
+    }
+    ```
+
+1. Click **Save and Run**
+
+</details>
 
 </details>
 
