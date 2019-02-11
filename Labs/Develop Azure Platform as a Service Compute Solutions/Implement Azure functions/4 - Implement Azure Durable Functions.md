@@ -398,7 +398,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 > **Note:** [Click here to consult the documentation regarding the Fan-in / fan-out pattern](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-cloud-backup).
 
-#### Task 1: Create a new Azure Durables Functions Orchestration called FanInFanOutPattern
+#### Task 1: Create a new Azure Durable Functions Orchestration called FanInFanOutPattern
 
 <details>
 <summary>Click here to display answers</summary>
@@ -634,6 +634,88 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
+#### Task 5: Add a 90 seconds timeout before Approval and test again
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Replace the WaitForExternalEvent instruction by the following code:
+
+    ```csharp
+    string approval = "Undefined";
+    using (var timeoutCts = new CancellationTokenSource())
+    {
+        DateTime expiration = context.CurrentUtcDateTime.AddSeconds(90);
+        Task timeoutTask = context.CreateTimer(expiration, timeoutCts.Token);
+        Task<string> approvalTask = context.WaitForExternalEvent<string>("Approval");
+
+        var winner = await Task.WhenAny(timeoutTask, approvalTask);
+        if (winner == approvalTask)
+        {
+            approval = approvalTask.Result;
+            timeoutCts.Cancel();
+        }
+        else
+            approval = "Timeout";
+    }
+    ```
+
+1. Start debugging to test, and trigger the **HumanInteractionPattern** function with **Postman**
+
+1. Check the **Logs**
+
+1. In **Postman**, click the **sendEventPostUri**
+
+1. Replace {eventName} by **Approval**
+
+1. In the new tab, select **POST**
+
+1. Under **Body**, select **raw**
+
+1. Under **Text**, select **JSON (application/json)**
+
+1. Type **"Approved"**
+
+1. Click **Send**
+
+1. Check the **Logs**
+
+    The Logs should display **Saying hello to Seattle.**
+
+1. Trigger the **HumanInteractionPattern** function with **Postman**
+
+1. Check the **Logs**
+
+1. In **Postman**, click the **sendEventPostUri**
+
+1. Replace {eventName} by **Approval**
+
+1. In the new tab, select **POST**
+
+1. Under **Body**, select **raw**
+
+1. Under **Text**, select **JSON (application/json)**
+
+1. Type **"Refused"**
+
+1. Click **Send**
+
+1. Check the **Logs**
+
+    The Logs should display **Saying hello to London.**
+
+1. Trigger the **HumanInteractionPattern** function with **Postman**
+
+1. Wait 90 seconds
+
+1. Check the **Logs**
+
+    The Logs should display **Saying hello to London.**
+
+1. Stop debugging
+
+</details>
+
 ## Lab 4: Handling human interaction in an orchestration with Twilio
 
 > **Note:** [Click here to consult the documentation regarding the human interaction handling with a phone verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification).
@@ -853,20 +935,55 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 4: Replace a timer trigger with the Monitoring pattern
+## Lab 5: Replace a timer trigger with the Monitoring pattern
 
-#### Task 1: Task_Name
+#### Task 1: Create a new Azure Durable Functions Orchestration called MonitoringPattern
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In the **Solution Explorer**, right-click the project and select **Add** > **New Azure Function...**
 
-1. Step 2
+1. In the **Add New Item** dialog, select **Azure Function**
+
+1. Next to **Name**, type *MonitoringPattern*
+
+1. Click **OK**
+
+1. In the **New Azure Function - MonitoringPattern** dialog, select **Durable Functions Orchestration** and click **OK**
 
 </details>
 
-#### Task 2: Task_Name
+#### Task 2: Replace the LogInformation by LogWarning in MonitoringPattern_Hello function
+
+#### Task 3: Create an Azure Table Storage called Weather with two columns Location and Status
+
+#### Task 4: Add new activity function called MonitoringPattern_GetWeather with an Azure Table Storage input binding associated to the table Weather
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Add the following function:
+
+    ```csharp
+    [FunctionName("MonitoringPattern_GetWeather")]
+    public static void MonitoringPattern_GetWeather([ActivityTrigger] string location,
+        CloudTable inputTable,
+        ILogger log)
+    {
+        
+    }
+    ```
+
+1. Resolve the **CloudTable** error by adding the using statement:
+
+    ```csharp
+    using Microsoft.WindowsAzure.Storage.Table;
+    ```
+
+</details>
+
+#### Task 4: Task_Name
 
 <details>
 <summary>Click here to display answers</summary>
