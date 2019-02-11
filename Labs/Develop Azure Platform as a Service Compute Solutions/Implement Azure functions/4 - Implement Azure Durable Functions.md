@@ -23,29 +23,25 @@ The following labs should be done in Visual Studio 2017.
 
 1. Select the **Empty** template
 
-1. Under **Storage Account**, selct **Storage Emulator**
+1. Under **Storage Account**, select **Storage Emulator**
 
 1. Click **OK**
 
 1. Right-click the project and select **Add** > **New Azure Function**
 
-1. Select **Azure Function**, next to **Name** type *RunOrchestrator*, click **Add**
+1. Select **Azure Function**, next to **Name** type *ChainingPattern*, click **Add**
 
 1. Select the **Durable Function Orchestration** template, click **OK**
-
-1. Rename the **RunOrchestrator.cs** file by **ChainingPattern.cs**
-
-1. In the refactoring dialog, click **Yes** in order to rename the class as well
 
 1. The template comes with three functions : an Http triggered function, and an Activity triggered function who is called three times in the RunOrchestrator function
 
 1. Click in the menu **Debug**, and select **Start Debugging**
 
-1. Copy the **RunOrchestrator_HttpStart** URL
+1. Copy the **ChainingPattern_HttpStart** URL
 
 1. Open **Postman**, and trigger the Http function by pasting the **URL**, selecting the **POST** method and clicking **Send**
 
-1. In the console, the log displays the execution of the **RunOrchestrator_Hello**
+1. In the console, the log displays the execution of the **ChainingPattern_Hello**
 
     ...
     Saying hello to Tokyo.
@@ -68,7 +64,7 @@ The following labs should be done in Visual Studio 2017.
 
 1. Copy the method **RunOrchestrator** and rename the duplicate by **RunSubOrchestration**
 
-1. In the content of the **RunSubOrchestration** method, call the **RunOrchestrator_Hello** twice, one with *Paris* input, and the second with *Seattle* (remove the third call)
+1. In the content of the **RunSubOrchestration** method, call the **ChainingPattern_Hello** twice, one with *Paris* input, and the second with *Seattle* (remove the third call)
 
     You should have the following code:
 
@@ -79,14 +75,14 @@ The following labs should be done in Visual Studio 2017.
     {
         var outputs = new List<string>();
 
-        outputs.Add(await context.CallActivityAsync<string>("RunOrchestrator_Hello", "Paris"));
-        outputs.Add(await context.CallActivityAsync<string>("RunOrchestrator_Hello", "Seattle"));
+        outputs.Add(await context.CallActivityAsync<string>("ChainingPattern_Hello", "Paris"));
+        outputs.Add(await context.CallActivityAsync<string>("ChainingPattern_Hello", "Seattle"));
 
         return outputs;
     }
     ```
 
-1. In the **RunOrchestrator** method, comment the second call to the **RunOrchestrator_Hello** function and add the following instruction:
+1. In the **RunOrchestrator** method, comment the second call to the **ChainingPattern_Hello** function and add the following instruction:
 
     ```csharp
     await context.CallSubOrchestratorAsync("RunSubOrchestration", null);
@@ -147,13 +143,13 @@ The function End should be called at the end of the orchestration and log *End*.
 1. Add the following activity functions:
 
     ```csharp
-    [FunctionName("RunOrchestrator_Start")]
+    [FunctionName("ChainingPattern_Start")]
     public static void Start([ActivityTrigger] object input, ILogger log)
     {
         log.LogWarning($"Start");
     }
 
-    [FunctionName("RunOrchestrator_End")]
+    [FunctionName("ChainingPattern_End")]
     public static void End([ActivityTrigger] object input, ILogger log)
     {
         log.LogWarning($"End");
@@ -167,13 +163,13 @@ The function End should be called at the end of the orchestration and log *End*.
 1. In the **RunOrchestrator** method, add the following call at the beginning of the method:
 
     ```csharp
-    await context.CallActivityAsync("RunOrchestrator_Start", null);
+    await context.CallActivityAsync("ChainingPattern_Start", null);
     ```
 
 1. In the **RunOrchestrator** method, add the following call at the end of the method, before the return instruction:
 
     ```csharp
-    await context.CallActivityAsync("RunOrchestrator_End", null);
+    await context.CallActivityAsync("ChainingPattern_End", null);
     ```
 
 </details>
@@ -394,11 +390,11 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 2: Implement a Fan-in / fan-out pattern
+## Lab 2: Implement a Fan-out / Fan-in pattern
 
-> **Note:** [Click here to consult the documentation regarding the Fan-in / fan-out pattern](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-cloud-backup).
+> **Note:** [Click here to consult the documentation regarding the Fan-out / Fan-in pattern](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-cloud-backup).
 
-#### Task 1: Create a new Azure Durable Functions Orchestration called FanInFanOutPattern
+#### Task 1: Create a new Azure Durable Functions Orchestration called FanOutFanInPattern
 
 <details>
 <summary>Click here to display answers</summary>
@@ -407,37 +403,37 @@ The function End should be called at the end of the orchestration and log *End*.
 
 1. In the **Add New Item** dialog, select **Azure Function**
 
-1. Next to **Name**, type *FanInFanOutPattern*
+1. Next to **Name**, type *FanOutFanInPattern*
 
 1. Click **OK**
 
-1. In the **New Azure Function - FanInFanOutPattern** dialog, select **Durable Functions Orchestration** and click **OK**
+1. In the **New Azure Function - FanOutFanInPattern** dialog, select **Durable Functions Orchestration** and click **OK**
 
 </details>
 
-#### Task 2: Replace the LogInformation by LogWarning in FanInFanOutPattern_Hello function
+#### Task 2: Replace the LogInformation by LogWarning in FanOutFanInPattern_Hello function
 
-#### Task 3: Create a sub-orchestration taking a list of strings and calling for each string the FanInFanOutPattern_Hello activity function
+#### Task 3: Create a sub-orchestration taking a list of strings and calling for each string the FanOutFanInPattern_Hello activity function
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Copy the method **RunOrchestrator** and rename the duplicate by **FanInFanOutPattern_SubOrchestration**
+1. Copy the method **RunOrchestrator** and rename the duplicate by **FanOutFanInPattern_SubOrchestration**
 
-1. In the content of the **FanInFanOutPattern_SubOrchestration** method
+1. In the content of the **FanOutFanInPattern_SubOrchestration** method
 
     You should have the following code:
 
     ```csharp
-    [FunctionName("FanInFanOutPattern_SubOrchestration")]
-    public static async Task<List<string>> FanInFanOutPattern_SubOrchestration(
+    [FunctionName("FanOutFanInPattern_SubOrchestration")]
+    public static async Task<List<string>> FanOutFanInPattern_SubOrchestration(
         [OrchestrationTrigger] DurableOrchestrationContext context)
     {
         var outputs = new List<string>();
 
-        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", "Tokyo"));
-        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", "Seattle"));
-        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", "London"));
+        outputs.Add(await context.CallActivityAsync<string>("FanOutFanInPattern_Hello", "Tokyo"));
+        outputs.Add(await context.CallActivityAsync<string>("FanOutFanInPattern_Hello", "Seattle"));
+        outputs.Add(await context.CallActivityAsync<string>("FanOutFanInPattern_Hello", "London"));
 
         return outputs;
     }
@@ -450,20 +446,20 @@ The function End should be called at the end of the orchestration and log *End*.
     var items = input.Split(";");
     ```
 
-1. Replace the three calls with a foreach, and call the **FanInFanOutPattern_Hello** function for each item of the list
+1. Replace the three calls with a foreach, and call the **FanOutFanInPattern_Hello** function for each item of the list
 
     ```csharp
     foreach (string item in items)
-        outputs.Add(await context.CallActivityAsync<string>("FanInFanOutPattern_Hello", item));
+        outputs.Add(await context.CallActivityAsync<string>("FanOutFanInPattern_Hello", item));
     ```
 
-1. In the **RunOrchestrator** method, remove the calls to the **FanInFanOutPattern_Hello** function and add the following instructions:
+1. In the **RunOrchestrator** method, remove the calls to the **FanOutFanInPattern_Hello** function and add the following instructions:
 
     ```csharp
-    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "Tokyo;Seattle;London");
+    await context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "Tokyo;Seattle;London");
     ```
 
-1. Start debugging to test, and trigger the FanInFanOutPattern function with **Postman**
+1. Start debugging to test, and trigger the FanOutFanInPattern function with **Postman**
 
 1. Check the **Logs**
 
@@ -482,16 +478,16 @@ The function End should be called at the end of the orchestration and log *End*.
 <details>
 <summary>Click here to display answers</summary>
 
-1. In the RunORchestrator method, replace the call by:
+1. In the RunOrchestrator method, replace the call by:
 
     ```csharp
-    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "Start;Start;Start");
+    await context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "Start;Start;Start");
 
-    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "1a;1b;1c");
-    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "2a;2b;2c;2d;2e;2f;2g;2h;2i");
-    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "3a");
+    await context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "1a;1b;1c");
+    await context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "2a;2b;2c;2d;2e;2f;2g;2h;2i");
+    await context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "3a");
 
-    await context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "End;End;End");
+    await context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "End;End;End");
     ```
 
 </details>
@@ -510,9 +506,9 @@ The function End should be called at the end of the orchestration and log *End*.
 1. Replace the calls with:
 
     ```csharp
-    tasks[0] = context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "1a;1b;1c");
-    tasks[1] = context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "2a;2b;2c;2d;2e;2f;2g;2h;2i");
-    tasks[2] = context.CallSubOrchestratorAsync("FanInFanOutPattern_SubOrchestration", "3a");
+    tasks[0] = context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "1a;1b;1c");
+    tasks[1] = context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "2a;2b;2c;2d;2e;2f;2g;2h;2i");
+    tasks[2] = context.CallSubOrchestratorAsync("FanOutFanInPattern_SubOrchestration", "3a");
     ```
 
 1. Wait for all tasks after the fourth call and before the fifth call
@@ -521,7 +517,7 @@ The function End should be called at the end of the orchestration and log *End*.
     await Task.WhenAll(tasks);
     ```
 
-1. Start debugging to test, and trigger the FanInFanOutPattern function with **Postman**
+1. Start debugging to test, and trigger the FanOutFanInPattern function with **Postman**
 
 1. Check the **Logs**
 
@@ -531,7 +527,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 3: Handling human interaction in an orchestration
+## Lab 3: Waiting for human interaction in an orchestration
 
 #### Task 1: Create a new Azure Durables Functions Orchestration called HumanInteractionPattern
 
@@ -716,7 +712,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 4: Handling human interaction in an orchestration with Twilio
+## Lab 4: Waiting for human interaction in an orchestration with Twilio
 
 > **Note:** [Click here to consult the documentation regarding the human interaction handling with a phone verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification).
 
@@ -935,7 +931,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 5: Replace a timer trigger with the Monitoring pattern
+## Lab 5: Replace a timer trigger with the Monitor pattern
 
 - Monitors run on intervals, not schedules: a timer trigger runs every hour; a monitor waits one hour between actions. A monitor's actions will not overlap unless specified, which can be important for long-running tasks.
 - Monitors can have dynamic intervals: the wait time can change based on some condition.
@@ -944,7 +940,7 @@ The function End should be called at the end of the orchestration and log *End*.
 - Monitors are scalable. Because each monitor is an orchestration instance, multiple monitors can be created without having to create new functions or define more code.
 - Monitors integrate easily into larger workflows. A monitor can be one section of a more complex orchestration function, or a sub-orchestration.
 
-> **Note:** [Click here to consult the tutorial regarding the **Monitoring pattern**](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-monitor).
+> **Note:** [Click here to consult the tutorial regarding the **Monitor pattern**](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-monitor).
 
 In this lab, we would like to create a **Monitor** checking our **Balance**:
 - If the **Balance** is greater than 100, log an **Information**, then wait 60 seconds before the next monitoring
@@ -954,7 +950,7 @@ In this lab, we would like to create a **Monitor** checking our **Balance**:
 
 In real-life, SMS can be sent to alert the person of his/her **Balance** with longer delays for each situation.
 
-#### Task 1: Create a new Azure Durable Functions Orchestration called MonitoringPattern
+#### Task 1: Create a new Azure Durable Functions Orchestration called MonitorPattern
 
 <details>
 <summary>Click here to display answers</summary>
@@ -963,11 +959,11 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 
 1. In the **Add New Item** dialog, select **Azure Function**
 
-1. Next to **Name**, type *MonitoringPattern*
+1. Next to **Name**, type *MonitorPattern*
 
 1. Click **OK**
 
-1. In the **New Azure Function - MonitoringPattern** dialog, select **Durable Functions Orchestration** and click **OK**
+1. In the **New Azure Function - MonitorPattern** dialog, select **Durable Functions Orchestration** and click **OK**
 
 </details>
 
@@ -1018,7 +1014,7 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 
 </details>
 
-#### Task 4: Add new activity function called MonitoringPattern_GetBalance and read the Balance from the table Balances for a given UserName and Location
+#### Task 4: Add new activity function called MonitorPattern_GetBalance and read the Balance from the table Balances for a given UserName and Location
 
 <details>
 <summary>Click here to display answers</summary>
@@ -1053,7 +1049,7 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 
 1. Open the **local.settings.json** file, add a new setting called **TableConnectionString** and paste the **Primary Connection String** as the value
 
-1. In the **MonitoringPattern** class, add the following using statements:
+1. In the **MonitorPattern** class, add the following using statements:
 
     ```csharp
     using System;
@@ -1062,11 +1058,11 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
     using Microsoft.WindowsAzure.Storage.Table;
     ```
 
-1. In the **MonitoringPattern** class, add the **MonitoringPattern_GetBalance** function with the following code:
+1. In the **MonitorPattern** class, add the **MonitorPattern_GetBalance** function with the following code:
 
     ```csharp
-    [FunctionName("MonitoringPattern_GetBalance")]
-    public static async Task<int> MonitoringPattern_GetBalance([ActivityTrigger] BalanceRequest balanceRequest, ILogger log)
+    [FunctionName("MonitorPattern_GetBalance")]
+    public static async Task<int> MonitorPattern_GetBalance([ActivityTrigger] BalanceRequest balanceRequest, ILogger log)
     {
         string tableConnectionString = Environment.GetEnvironmentVariable("TableConnectionString", EnvironmentVariableTarget.Process);
         CloudStorageAccount storageAccount = CloudStorageAccount.Parse(tableConnectionString);
@@ -1088,7 +1084,7 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
     }
     ```
 
-1. Replace the **RunOrchestrator** method with the following code in order to call the **MonitoringPattern_GetBalance** activity function:
+1. Replace the **RunOrchestrator** method with the following code in order to call the **MonitorPattern_GetBalance** activity function:
 
     ```csharp
         public static async Task RunOrchestrator(
@@ -1100,12 +1096,12 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
                 UserName = "Alpha" 
             };
 
-            int balance = await context.CallActivityAsync<int>("MonitoringPattern_GetBalance", balanceRequest);
+            int balance = await context.CallActivityAsync<int>("MonitorPattern_GetBalance", balanceRequest);
             log.LogCritical($"Balance is {balance} for user {balanceRequest.UserName}");
         }
     ```
 
-1. Start debugging to test, and trigger the **MonitoringPattern** function with **Postman**
+1. Start debugging to test, and trigger the **MonitorPattern** function with **Postman**
 
 1. Check the **Logs**
 
@@ -1124,12 +1120,12 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
     DateTime endTime = monitorContext.CurrentUtcDateTime.AddMinutes(10);
     ```
 
-1. Wrap the call to the **MonitoringPattern_GetBalance** activity function and the log in a while loop
+1. Wrap the call to the **MonitorPattern_GetBalance** activity function and the log in a while loop
 
     ```csharp
     while (context.CurrentUtcDateTime < endTime)
     {
-        int balance = await context.CallActivityAsync<int>("MonitoringPattern_GetBalance", balanceRequest);
+        int balance = await context.CallActivityAsync<int>("MonitorPattern_GetBalance", balanceRequest);
         if(!context.IsReplaying)
             log.LogCritical($"Balance is {balance} for user {balanceRequest.UserName}");
     }
@@ -1147,7 +1143,7 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
     await context.CreateTimer(nextCheckpoint, CancellationToken.None);
     ```
 
-1. Start debugging to test, and trigger the **MonitoringPattern** function with **Postman**
+1. Start debugging to test, and trigger the **MonitorPattern** function with **Postman**
 
 1. Check the **Logs**
 
@@ -1162,11 +1158,11 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 <details>
 <summary>Click here to display answers</summary>
 
-1. Create an activity function called **MonitoringPattern_IsClear** with the following code:
+1. Create an activity function called **MonitorPattern_IsClear** with the following code:
 
     ```csharp
-    [FunctionName("MonitoringPattern_IsClear")]
-    public static async Task<bool> MonitoringPattern_IsClear([ActivityTrigger] int balance, ILogger log)
+    [FunctionName("MonitorPattern_IsClear")]
+    public static async Task<bool> MonitorPattern_IsClear([ActivityTrigger] int balance, ILogger log)
     {
         if (balance > 100)
         {
@@ -1178,11 +1174,11 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
     }
     ```
 
-1. Create an activity function called **MonitoringPattern_IsWarning** with the following code:
+1. Create an activity function called **MonitorPattern_IsWarning** with the following code:
 
     ```csharp
-    [FunctionName("MonitoringPattern_IsWarning")]
-    public static async Task<bool> MonitoringPattern_IsWarning([ActivityTrigger] int balance, ILogger log)
+    [FunctionName("MonitorPattern_IsWarning")]
+    public static async Task<bool> MonitorPattern_IsWarning([ActivityTrigger] int balance, ILogger log)
     {
         if (0 <= balance && balance <= 100)
         {
@@ -1194,10 +1190,10 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
     }
     ```
 
-1. Create an activity function called **MonitoringPattern_IsAlert** with the following code:
+1. Create an activity function called **MonitorPattern_IsAlert** with the following code:
 
     ```csharp
-    public static async Task<bool> MonitoringPattern_IsAlert([ActivityTrigger] int balance, ILogger log)
+    public static async Task<bool> MonitorPattern_IsAlert([ActivityTrigger] int balance, ILogger log)
     {
         if (balance < 0)
         {
@@ -1212,17 +1208,17 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 1. In the **RunOrchestrator**, add the following code before the timer creation:
 
     ```csharp
-    if(await context.CallActivityAsync<bool>("MonitoringPattern_IsClear", balance))
+    if(await context.CallActivityAsync<bool>("MonitorPattern_IsClear", balance))
         nextCheckpoint = context.CurrentUtcDateTime.AddSeconds(60);
 
-    if (await context.CallActivityAsync<bool>("MonitoringPattern_IsWarning", balance))
+    if (await context.CallActivityAsync<bool>("MonitorPattern_IsWarning", balance))
         nextCheckpoint = context.CurrentUtcDateTime.AddSeconds(30);
 
-    if (await context.CallActivityAsync<bool>("MonitoringPattern_IsAlert", balance))
+    if (await context.CallActivityAsync<bool>("MonitorPattern_IsAlert", balance))
         nextCheckpoint = context.CurrentUtcDateTime.AddSeconds(10);
     ```
 
-1. Start debugging to test, and trigger the **MonitoringPattern** function with **Postman**
+1. Start debugging to test, and trigger the **MonitorPattern** function with **Postman**
 
 1. Check the **Logs**
 
@@ -1241,6 +1237,8 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 1. After two **"Balance is low!"** logs, go to **Postman**, click the **terminatePostUri**, select **POST** and click **Send**
 
 1. Stop debugging
+
+</details>
 
 ## Lab 6: Coordinate the state of long-running operations with the Async HTTP APIs pattern
 
