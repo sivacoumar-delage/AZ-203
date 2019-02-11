@@ -937,6 +937,23 @@ The function End should be called at the end of the orchestration and log *End*.
 
 ## Lab 5: Replace a timer trigger with the Monitoring pattern
 
+- Monitors run on intervals, not schedules: a timer trigger runs every hour; a monitor waits one hour between actions. A monitor's actions will not overlap unless specified, which can be important for long-running tasks.
+- Monitors can have dynamic intervals: the wait time can change based on some condition.
+- Monitors can terminate when some condition is met or be terminated by another process.
+- Monitors can take parameters. The sample shows how the same weather-monitoring process can be applied to any requested location and phone number.
+- Monitors are scalable. Because each monitor is an orchestration instance, multiple monitors can be created without having to create new functions or define more code.
+- Monitors integrate easily into larger workflows. A monitor can be one section of a more complex orchestration function, or a sub-orchestration.
+
+> **Note:** [Click here to consult the tutorial regarding the **Monitoring pattern**](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-monitor).
+
+In this lab, we would like to create a **Monitor** checking our **Balance**:
+- If the **Balance** is greater than 100, log an **Information**, then wait 60 seconds before the next monitoring
+- If the **Balance** is between 0 and 100, log an **Warning**, then wait 30 seconds before the next monitoring
+- If the **Balance** is less than 0, log an **Error**, then wait 10 seconds before the next monitoring
+- Terminate the **Monitor** after 5 minutes
+
+In real-life, SMS can be sent to alert the person of his/her **Balance** with longer delays for each situation.
+
 #### Task 1: Create a new Azure Durable Functions Orchestration called MonitoringPattern
 
 <details>
@@ -954,47 +971,278 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-#### Task 2: Replace the LogInformation by LogWarning in MonitoringPattern_Hello function
-
-#### Task 3: Create an Azure Table Storage called Weather with two columns Location and Status
-
-#### Task 4: Add new activity function called MonitoringPattern_GetWeather with an Azure Table Storage input binding associated to the table Weather
+#### Task 2: Create an Azure Table Storage called Balances with two columns UserName and Balance
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Add the following function:
+1. Open **Microsoft Azure Storage Explorer**, expand **Local & Attached** > **Storage Accounts** > **Emulator - Default Ports (Key)**
+
+1. Right-click **Tables** and click **Create Table**
+
+1. Type **Balances**
+
+</details>
+
+#### Task 3: Add the following entities in the created table
+
+| PartitionKey | RowKey | UserName | Balance |
+| ------------ | ------ | -------- | ------- |
+| Paris        | Alpha  | Alpha    | 150     |
+| Tokyo        | Beta   | Beta     | 50      |
+| Seattle      | Delta  | Delta    | 0       |
+| London       | Gamma  | Gamma    | -50     |
+| Paris        | Omega  | Omega    | -100    |
+
+<br />
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Click **Add**
+
+1. In the **Microsoft Azure Storage Explorer - Add Entity** dialog, click **Add Property** twice
+
+1. Fill as following:
+
+    | Property Name | Type   | Value |
+    | ------------- | ------ | ----- |
+    | PartitionKey  | String | Paris |
+    | RowKey        | String | Alpha |
+    | UserName      | String | Alpha |
+    | Balance       | Int32  | 200   |
+
+1. Click **Insert**
+
+1. Repeat the same steps to add the remaining entities
+
+</details>
+
+#### Task 4: Add new activity function called MonitoringPattern_GetBalance and read the Balance from the table Balances for a given UserName and Location
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Add a new class called **BalanceRequest** with the properties **Location** and **Balance**
 
     ```csharp
-    [FunctionName("MonitoringPattern_GetWeather")]
-    public static void MonitoringPattern_GetWeather([ActivityTrigger] string location,
-        CloudTable inputTable,
-        ILogger log)
+    public class BalanceRequest
     {
-        
+        public string Location { get; set; }
+        public string UserName { get; set; }
     }
     ```
 
-1. Resolve the **CloudTable** error by adding the using statement:
+1. Add a new class called **BalanceEntity** deriving from **TableEntity** with the properties **UserName** and **Balance**
+
+    ```csharp
+    public class BalanceEntity : TableEntity
+    {
+        public string UserName { get; set; }
+        public int Balance { get; set; }
+    }
+    ```
+
+1. In the **BalanceEntity** class, add the following using statement:
 
     ```csharp
     using Microsoft.WindowsAzure.Storage.Table;
     ```
 
+1. In **Azure Storage Explorer**, select **Emulator - Default Ports (Key)** and copy the **Primary Connection String** 
+
+1. Open the **local.settings.json** file, add a new setting called **TableConnectionString** and paste the **Primary Connection String** as the value
+
+1. In the **MonitoringPattern** class, add the following using statements:
+
+    ```csharp
+    using System;
+    using System.Threading;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Table;
+    ```
+
+1. In the **MonitoringPattern** class, add the **MonitoringPattern_GetBalance** function with the following code:
+
+    ```csharp
+    [FunctionName("MonitoringPattern_GetBalance")]
+    public static async Task<int> MonitoringPattern_GetBalance([ActivityTrigger] BalanceRequest balanceRequest, ILogger log)
+    {
+        string tableConnectionString = Environment.GetEnvironmentVariable("TableConnectionString", EnvironmentVariableTarget.Process);
+        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(tableConnectionString);
+        CloudTableClient client = storageAccount.CreateCloudTableClient();
+        CloudTable table = client.GetTableReference("Balances");
+        await table.CreateIfNotExistsAsync();
+        TableOperation operation = TableOperation.Retrieve<BalanceEntity>(balanceRequest.Location, balanceRequest.UserName);
+        TableResult tableResult = await table.ExecuteAsync(operation);
+
+        var entity = (BalanceEntity)tableResult.Result;
+        if (entity != null)
+        {
+            return entity.Balance;
+        }
+        else
+        {
+            throw new Exception($"User {balanceRequest.UserName} doesn't exist in {balanceRequest.Location}.");
+        }
+    }
+    ```
+
+1. Replace the **RunOrchestrator** method with the following code in order to call the **MonitoringPattern_GetBalance** activity function:
+
+    ```csharp
+        public static async Task RunOrchestrator(
+            [OrchestrationTrigger] DurableOrchestrationContext context, ILogger log)
+        {
+            BalanceRequest balanceRequest = new BalanceRequest 
+            { 
+                Location = "Paris", 
+                UserName = "Alpha" 
+            };
+
+            int balance = await context.CallActivityAsync<int>("MonitoringPattern_GetBalance", balanceRequest);
+            log.LogCritical($"Balance is {balance} for user {balanceRequest.UserName}");
+        }
+    ```
+
+1. Start debugging to test, and trigger the **MonitoringPattern** function with **Postman**
+
+1. Check the **Logs**
+
+1. Stop debugging
+
 </details>
 
-#### Task 4: Task_Name
+#### Task 4: Create the Monitor loop terminating after 10 minutes and checking the balance every minute
 
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. After the assignation of the balanceRequest variable, add the following code:
 
-1. Step 2
+    ```csharp
+    DateTime endTime = monitorContext.CurrentUtcDateTime.AddMinutes(10);
+    ```
+
+1. Wrap the call to the **MonitoringPattern_GetBalance** activity function and the log in a while loop
+
+    ```csharp
+    while (context.CurrentUtcDateTime < endTime)
+    {
+        int balance = await context.CallActivityAsync<int>("MonitoringPattern_GetBalance", balanceRequest);
+        if(!context.IsReplaying)
+            log.LogCritical($"Balance is {balance} for user {balanceRequest.UserName}");
+    }
+    ```
+
+1. In the end of the while loop, wait 60 seconds by adding the following code:
+
+    ```csharp
+    var nextCheckpoint = context.CurrentUtcDateTime.AddSeconds(60);
+    ```
+
+1. In the end of the while loop, wait 60 seconds by adding the following code:
+
+    ```csharp
+    await context.CreateTimer(nextCheckpoint, CancellationToken.None);
+    ```
+
+1. Start debugging to test, and trigger the **MonitoringPattern** function with **Postman**
+
+1. Check the **Logs**
+
+1. In **Postman**, click the **terminatePostUri**, select **POST** and click **Send**
+
+1. Stop debugging
 
 </details>
 
-## Lab 5: Coordinate the state of long-running operations with the Async HTTP APIs pattern
+#### Task 5: Add three activity functions to get the status of each condition and update the nextCheckpoint timer accordingly
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Create an activity function called **MonitoringPattern_IsClear** with the following code:
+
+    ```csharp
+    [FunctionName("MonitoringPattern_IsClear")]
+    public static async Task<bool> MonitoringPattern_IsClear([ActivityTrigger] int balance, ILogger log)
+    {
+        if (balance > 100)
+        {
+            log.LogInformation("Balance is clear.");
+            return true;
+        }
+        else
+            return false;
+    }
+    ```
+
+1. Create an activity function called **MonitoringPattern_IsWarning** with the following code:
+
+    ```csharp
+    [FunctionName("MonitoringPattern_IsWarning")]
+    public static async Task<bool> MonitoringPattern_IsWarning([ActivityTrigger] int balance, ILogger log)
+    {
+        if (0 <= balance && balance <= 100)
+        {
+            log.LogWarning("Balance is low!");
+            return true;
+        }
+        else
+            return false;
+    }
+    ```
+
+1. Create an activity function called **MonitoringPattern_IsAlert** with the following code:
+
+    ```csharp
+    public static async Task<bool> MonitoringPattern_IsAlert([ActivityTrigger] int balance, ILogger log)
+    {
+        if (balance < 0)
+        {
+            log.LogError("Balance is negative!!!");
+            return true;
+        }
+        else
+            return false;
+    }
+    ```
+
+1. In the **RunOrchestrator**, add the following code before the timer creation:
+
+    ```csharp
+    if(await context.CallActivityAsync<bool>("MonitoringPattern_IsClear", balance))
+        nextCheckpoint = context.CurrentUtcDateTime.AddSeconds(60);
+
+    if (await context.CallActivityAsync<bool>("MonitoringPattern_IsWarning", balance))
+        nextCheckpoint = context.CurrentUtcDateTime.AddSeconds(30);
+
+    if (await context.CallActivityAsync<bool>("MonitoringPattern_IsAlert", balance))
+        nextCheckpoint = context.CurrentUtcDateTime.AddSeconds(10);
+    ```
+
+1. Start debugging to test, and trigger the **MonitoringPattern** function with **Postman**
+
+1. Check the **Logs**
+
+1. After two **"Balance is clear."** logs, go to **Microsoft Azure Storage Explorer**, select the **Balances** table, select **Alpha** row, click **Edit**, change the **Balance** to *50* and click **Update**
+
+1. Check the **Logs**
+
+1. After two **"Balance is low!"** logs, go to **Microsoft Azure Storage Explorer**, select the **Balances** table, select **Alpha** row, click **Edit**, change the **Balance** to *-50* and click **Update**
+
+1. Check the **Logs**
+
+1. After two **"Balance is negative!!!"** logs, go to **Microsoft Azure Storage Explorer**, select the **Balances** table, select **Alpha** row, click **Edit**, change the **Balance** to *50* and click **Update**
+
+1. Check the **Logs**
+
+1. After two **"Balance is low!"** logs, go to **Postman**, click the **terminatePostUri**, select **POST** and click **Send**
+
+1. Stop debugging
+
+## Lab 6: Coordinate the state of long-running operations with the Async HTTP APIs pattern
 
 #### Task 1: Task_Name
 
@@ -1018,7 +1266,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 6: Dealing with breaking changes when deploying a new version
+## Lab 7: Dealing with breaking changes when deploying a new version
 
 #### Task 1: Stop all in-flight instances by clearing the contents of the internal control-queue and workitem-queue queues
 
