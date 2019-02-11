@@ -533,8 +533,6 @@ The function End should be called at the end of the orchestration and log *End*.
 
 ## Lab 3: Handling human interaction in an orchestration
 
-> **Note:** [Click here to consult the documentation regarding the human interaction handling with a phone verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification).
-
 #### Task 1: Create a new Azure Durables Functions Orchestration called HumanInteractionPattern
 
 <details>
@@ -553,6 +551,111 @@ The function End should be called at the end of the orchestration and log *End*.
 </details>
 
 #### Task 2: Replace the LogInformation by LogWarning in HumanInteractionPattern_Hello function
+
+#### Task 3: Wait for an external event called Approval
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **RunOrchestrator** method, add the following code before the second call to the **HumanInteractionPattern_Hello** function:
+
+    ```csharp
+    string approval = await context.WaitForExternalEvent<string>("Approval");
+    ```
+
+</details>
+
+#### Task 4: Add a condition: call the second function if approval is equal to **Approved**, else call the third function
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **RunOrchestrator** method, add the following code before the second call to the **HumanInteractionPattern_Hello** function:
+
+    ```csharp
+    if(approval == "Approved")
+        outputs.Add(await context.CallActivityAsync<string>("HumanInteractionPattern_Hello", "Seattle"));
+    else
+        outputs.Add(await context.CallActivityAsync<string>("HumanInteractionPattern_Hello", "London"));
+    ```
+
+</details>
+
+#### Task 5: Test the human interaction
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Start debugging to test, and trigger the **HumanInteractionPattern** function with **Postman**
+
+1. Check the **Logs**
+
+1. In **Postman**, click the **sendEventPostUri**
+
+1. Replace {eventName} by **Approval**
+
+1. In the new tab, select **POST**
+
+1. Under **Body**, select **raw**
+
+1. Under **Text**, select **JSON (application/json)**
+
+1. Type **"Approved"**
+
+1. Click **Send**
+
+1. Check the **Logs**
+
+    The Logs should display **Saying hello to Seattle.**
+
+1. Trigger the **HumanInteractionPattern** function with **Postman**
+
+1. Check the **Logs**
+
+1. In **Postman**, click the **sendEventPostUri**
+
+1. Replace {eventName} by **Approval**
+
+1. In the new tab, select **POST**
+
+1. Under **Body**, select **raw**
+
+1. Under **Text**, select **JSON (application/json)**
+
+1. Type **"Refused"**
+
+1. Click **Send**
+
+1. Check the **Logs**
+
+    The Logs should display **Saying hello to London.**
+
+1. Stop debugging
+
+</details>
+
+## Lab 4: Handling human interaction in an orchestration with Twilio
+
+> **Note:** [Click here to consult the documentation regarding the human interaction handling with a phone verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification).
+
+#### Task 1: Create a new Azure Durables Functions Orchestration called SmsInteractionPattern
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **Solution Explorer**, right-click the project and select **Add** > **New Azure Function...**
+
+1. In the **Add New Item** dialog, select **Azure Function**
+
+1. Next to **Name**, type *SmsInteractionPattern*
+
+1. Click **OK**
+
+1. In the **New Azure Function - SmsInteractionPattern** dialog, select **Durable Functions Orchestration** and click **OK**
+
+</details>
+
+#### Task 2: Replace the LogInformation by LogWarning in SmsInteractionPattern_Hello function
 
 #### Task 3: Create a free Twilio account and configure the app settings
 
@@ -668,18 +771,18 @@ The function End should be called at the end of the orchestration and log *End*.
     }
     ```
 
-1. In the **RunOrchestrator** method, add the following code after the first call to the **HumanInteractionPattern_Hello** function:
+1. In the **RunOrchestrator** method, add the following code after the first call to the **SmsInteractionPattern_Hello** function:
 
     ```csharp
     string phoneNumber = "+33xxxxxxxxx";
     bool authorized = await context.CallSubOrchestratorAsync<bool>("SmsPhoneVerification", phoneNumber);
     ```
 
-1. Add the following if statement before the second call to the **HumanInteractionPattern_Hello** function:
+1. Add the following if statement before the second call to the **SmsInteractionPattern_Hello** function:
 
     ```csharp
     if(authorized)
-        outputs.Add(await context.CallActivityAsync<string>("HumanInteractionPattern_Hello", "Seattle"));
+        outputs.Add(await context.CallActivityAsync<string>("SmsInteractionPattern_Hello", "Seattle"));
     ```
 
 </details>
@@ -728,7 +831,7 @@ The function End should be called at the end of the orchestration and log *End*.
     }
     ``` 
 
-1. Start debugging to test, and trigger the FanInFanOutPattern function with **Postman**
+1. Start debugging to test, and trigger the SmsInteractionPattern function with **Postman**
 
 1. Check the **Logs**
 
