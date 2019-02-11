@@ -396,6 +396,8 @@ The function End should be called at the end of the orchestration and log *End*.
 
 ## Lab 2: Implement a Fan-in / fan-out pattern
 
+> **Note:** [Click here to consult the documentation regarding the Fan-in / fan-out pattern](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-cloud-backup).
+
 #### Task 1: Create a new Azure Durables Functions Orchestration called FanInFanOutPattern
 
 <details>
@@ -531,6 +533,225 @@ The function End should be called at the end of the orchestration and log *End*.
 
 ## Lab 3: Handling human interaction in an orchestration
 
+> **Note:** [Click here to consult the documentation regarding the human interaction handling with a phone verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification).
+
+#### Task 1: Create a new Azure Durables Functions Orchestration called HumanInteractionPattern
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **Solution Explorer**, right-click the project and select **Add** > **New Azure Function...**
+
+1. In the **Add New Item** dialog, select **Azure Function**
+
+1. Next to **Name**, type *HumanInteractionPattern*
+
+1. Click **OK**
+
+1. In the **New Azure Function - HumanInteractionPattern** dialog, select **Durable Functions Orchestration** and click **OK**
+
+</details>
+
+#### Task 2: Replace the LogInformation by LogWarning in HumanInteractionPattern_Hello function
+
+#### Task 3: Create a free Twilio account and configure the app settings
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Go to [Try Twilio](https://www.twilio.com/try-twilio)
+
+1. Fill the form and click **Get Started**
+
+1. Fill your phone number and validate
+
+1. Get the verification code from the SMS sent by Twilio
+
+1. Input the verification code and confirm
+
+1. Go to [Twilio Test Credentials ](https://www.twilio.com/console/voice/runtime/test-credentials)
+
+1. Copy the **Account SID**
+
+1. In **Visual Studio**, open the local.settings.json
+
+1. Add the setting **TwilioAccountSid** and paste the **Account SID** in the value
+
+1. Go back to **Twilio**, copy the **Auth Token**
+
+1. In **Visual Studio**, in the local.settings.json
+
+1. Add the setting **TwilioAuthToken** and paste the **Auth Token** in the value
+
+1. Add the setting **TwilioPhoneNumber** and type *+15005550006*
+
+</details>
+
+#### Task 4: Send the code by SMS
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Install the **Microsoft.Azure.WebJobs.Extensions.Twilio** Nuget package
+
+1. Add the following using statements:
+
+    ```csharp
+    using System;
+    using System.Threading;
+    #if NETCOREAPP2_1
+    using Twilio.Rest.Api.V2010.Account;
+    using Twilio.Types;
+    #else
+    using Twilio;
+    #endif
+    ```
+
+1. Add the SendSmsChallenge function with the following code:
+
+    ```csharp
+    [FunctionName("SendSmsChallenge")]
+    public static int SendSmsChallenge(
+        [ActivityTrigger] string phoneNumber,
+        ILogger log,
+        [TwilioSms(AccountSidSetting = "TwilioAccountSid", AuthTokenSetting = "TwilioAuthToken", From = "%TwilioPhoneNumber%")]
+#if NETCOREAPP2_1
+            out CreateMessageOptions message)
+#else
+            out SMSMessage message)
+#endif
+    {
+        // Get a random number generator with a random seed (not time-based)
+        var rand = new Random(Guid.NewGuid().GetHashCode());
+        int challengeCode = rand.Next(10000);
+
+        log.LogWarning($"Sending verification code {challengeCode} to {phoneNumber}.");
+
+#if NETCOREAPP2_1
+        message = new CreateMessageOptions(new PhoneNumber(phoneNumber));
+#else
+        message = new SMSMessage { To = phoneNumber };
+#endif
+        message.Body = $"Your verification code is {challengeCode:0000}";
+
+        return challengeCode;
+    }
+    ```
+
+1. Add the SmsPhoneVerification function with the following code: 
+
+    ```csharp
+    [FunctionName("SmsPhoneVerification")]
+    public static async Task<bool> Run(
+        [OrchestrationTrigger] DurableOrchestrationContext context, ILogger log)
+    {
+        string phoneNumber = context.GetInput<string>();
+        bool authorized = false;
+
+        if (string.IsNullOrEmpty(phoneNumber))
+        {
+            throw new ArgumentNullException(
+                nameof(phoneNumber),
+                "A phone number input is required.");
+        }
+
+        int challengeCode = await context.CallActivityAsync<int>(
+            "SendSmsChallenge",
+            phoneNumber);
+
+        // TODO: Wait for human interaction
+
+        if(!authorized)
+            log.LogError("Not authorized");
+
+        return authorized;
+    }
+    ```
+
+1. In the **RunOrchestrator** method, add the following code after the first call to the **HumanInteractionPattern_Hello** function:
+
+    ```csharp
+    string phoneNumber = "+33xxxxxxxxx";
+    bool authorized = await context.CallSubOrchestratorAsync<bool>("SmsPhoneVerification", phoneNumber);
+    ```
+
+1. Add the following if statement before the second call to the **HumanInteractionPattern_Hello** function:
+
+    ```csharp
+    if(authorized)
+        outputs.Add(await context.CallActivityAsync<string>("HumanInteractionPattern_Hello", "Seattle"));
+    ```
+
+</details>
+
+#### Task 5: Wait and check the human response
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **SmsPhoneVerification** function, replace the *// TODO: Wait for human interaction* with the following code:
+
+    ```csharp
+    using (var timeoutCts = new CancellationTokenSource())
+    {
+        // The user has 90 seconds to respond with the code they received in the SMS message.
+        DateTime expiration = context.CurrentUtcDateTime.AddSeconds(90);
+        Task timeoutTask = context.CreateTimer(expiration, timeoutCts.Token);
+
+        for (int retryCount = 0; retryCount <= 3; retryCount++)
+        {
+            Task<int> challengeResponseTask =
+                context.WaitForExternalEvent<int>("SmsChallengeResponse");
+
+            Task winner = await Task.WhenAny(challengeResponseTask, timeoutTask);
+            if (winner == challengeResponseTask)
+            {
+                // We got back a response! Compare it to the challenge code.
+                if (challengeResponseTask.Result == challengeCode)
+                {
+                    authorized = true;
+                    break;
+                }
+            }
+            else
+            {
+                // Timeout expired
+                break;
+            }
+        }
+
+        if (!timeoutTask.IsCompleted)
+        {
+            // All pending timers must be complete or canceled before the function exits.
+            timeoutCts.Cancel();
+        }
+    }
+    ``` 
+
+1. Start debugging to test, and trigger the FanInFanOutPattern function with **Postman**
+
+1. Check the **Logs**
+
+1. In **Postman**, click the **sendEventPostUri**
+
+1. Replace {eventName} by **SmsChallengeResponse**
+
+1. In the new tab, select **POST**
+
+1. Under **Body**, select **raw**
+
+1. Under **Text**, select **JSON (application/json)**
+
+1. Type the verification code
+
+1. Click **Send**
+
+1. Stop debugging
+
+</details>
+
+## Lab 4: Replace a timer trigger with the Monitoring pattern
+
 #### Task 1: Task_Name
 
 <details>
@@ -553,31 +774,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 4: Coordinate the state of long-running operations with the Async HTTP APIs pattern
-
-#### Task 1: Task_Name
-
-<details>
-<summary>Click here to display answers</summary>
-
-1. Step 1
-
-1. Step 2
-
-</details>
-
-#### Task 2: Task_Name
-
-<details>
-<summary>Click here to display answers</summary>
-
-1. Step 1
-
-1. Step 2
-
-</details>
-
-## Lab 5: Replace a timer trigger with the Monitoring pattern
+## Lab 5: Coordinate the state of long-running operations with the Async HTTP APIs pattern
 
 #### Task 1: Task_Name
 
