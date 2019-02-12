@@ -1398,7 +1398,13 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 
 ## Lab 7: Dealing with breaking changes when deploying a new version
 
-#### Task 1: Stop all in-flight instances by clearing the contents of the internal control-queue and workitem-queue queues
+> **Note:** [Click here to consult the document regarding the mitigation strategies for dealing with versioning challenges](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-versioning#mitigation-strategies).
+
+#### Task 1: Do nothing
+
+*This approach has been used in Lab 5 to terminate an Eternal orchestration.*
+
+#### Task 2: Stop all in-flight instances by clearing the contents of the internal control-queue and workitem-queue queues
 
 <details>
 <summary>Click here to display answers</summary>
@@ -1409,7 +1415,7 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 
 </details>
 
-#### Task 2: Side-by-side deployments with deployment slots and the Task Hub
+#### Task 3: Side-by-side deployments with deployment slots and the Task Hub
 
 <details>
 <summary>Click here to display answers</summary>
