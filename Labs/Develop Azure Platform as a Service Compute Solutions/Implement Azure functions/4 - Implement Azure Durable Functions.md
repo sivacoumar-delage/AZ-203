@@ -529,7 +529,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 ## Lab 3: Waiting for human interaction in an orchestration
 
-#### Task 1: Create a new Azure Durables Functions Orchestration called HumanInteractionPattern
+#### Task 1: Create a new Azure Durable Functions Orchestration called HumanInteractionPattern
 
 <details>
 <summary>Click here to display answers</summary>
@@ -630,7 +630,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-#### Task 5: Add a 90 seconds timeout before Approval and test again
+#### Task 6: Add a 90 seconds timeout before Approval and test again
 
 <details>
 <summary>Click here to display answers</summary>
@@ -716,7 +716,7 @@ The function End should be called at the end of the orchestration and log *End*.
 
 > **Note:** [Click here to consult the documentation regarding the human interaction handling with a phone verification](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-phone-verification).
 
-#### Task 1: Create a new Azure Durables Functions Orchestration called SmsInteractionPattern
+#### Task 1: Create a new Azure Durable Functions Orchestration called SmsInteractionPattern
 
 <details>
 <summary>Click here to display answers</summary>
@@ -931,7 +931,163 @@ The function End should be called at the end of the orchestration and log *End*.
 
 </details>
 
-## Lab 5: Replace a timer trigger with the Monitor pattern
+## Lab 5: Running Eternal orchestrations
+
+> **Note:** [Click here to consult the documentation regarding **Eternal orchestrations**](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-eternal-orchestrations).
+
+#### Task 1: Create a new Azure Durable Functions Orchestration called EternalOrchestration
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **Solution Explorer**, right-click the project and select **Add** > **New Azure Function...**
+
+1. In the **Add New Item** dialog, select **Azure Function**
+
+1. Next to **Name**, type *EternalOrchestration*
+
+1. Click **OK**
+
+1. In the **New Azure Function - EternalOrchestration** dialog, select **Durable Functions Orchestration** and click **OK**
+
+</details>
+
+#### Task 2: Read number in the EternalOrchestration_HttpStart function and pass it to the EternalOrchestration function
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Add the following code in the beginning of the **EternalOrchestration_HttpStart** method:
+
+    ```csharp
+    var content = req.Content;
+    string inputString = await content.ReadAsStringAsync();
+    int inputNumber = 0;
+    int.TryParse(inputString, out inputNumber);
+    ```
+
+1. Pass the inputNumber variable in the call to the **EternalOrchestration** function
+
+    ```csharp
+    string instanceId = await starter.StartNewAsync("EternalOrchestration", inputNumber);
+    ```
+
+</details>
+
+#### Task 3: Replace the LogInformation by LogWarning in EternalOrchestration_Hello function
+
+#### Task 4: Log the input number in the RunOrchestrator function
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Replace the **RunOrchestrator** method with the following code:
+
+    ```csharp
+    public static async Task RunOrchestrator(
+        [OrchestrationTrigger] DurableOrchestrationContext context, ILogger logger)
+    {
+        int inputNumber = context.GetInput<int>();
+        if(!context.IsReplaying)
+            logger.LogWarning(inputNumber.ToString());
+
+        await context.CallActivityAsync<string>("EternalOrchestration_Hello", "Tokyo");
+        await context.CallActivityAsync<string>("EternalOrchestration_Hello", "Seattle");
+        await context.CallActivityAsync<string>("EternalOrchestration_Hello", "London");
+    }
+    ```
+
+1. Start debugging to test and copy the URL of the **EternalOrchestration** function
+
+1. In **Postman**, paste the **URL** and select **POST**
+
+1. Click **Body** select **raw** and under **Text** select **JSON (application/json)**
+
+1. Type *10*
+
+1. Click **Send**
+
+1. In Azure Functions console, check the **Logs**
+
+1. Stop debugging
+
+</details>
+
+#### Task 5: Resetting the orchestration history and pass (inputNumber + 1) to the next orchestration if the inputNumber is less than 50, and with a 15 seconds delay between each run
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Add the following code at the end of the **RunOrchestrator** method in order to wait 15 seconds before ending the run:
+
+    ```csharp
+    var nextRun = context.CurrentUtcDateTime.AddSeconds(15);
+    await context.CreateTimer(nextRun, CancellationToken.None);
+    ```
+
+1. Resolve the error by adding the following using statement:
+
+    ```csharp
+    using System.Threading;
+    ```
+
+1. Add the following code at the end of the **RunOrchestrator** method in order to reset the orchestration function:
+
+    ```csharp
+    if(inputNumber < 50)
+        context.ContinueAsNew(inputNumber + 1);
+    ```
+
+1. Start debugging to test and copy the URL of the **EternalOrchestration** function
+
+1. In **Postman**, paste the **URL** and select **POST**
+
+1. Click **Body** select **raw** and under **Text** select **JSON (application/json)**
+
+1. Type *10*
+
+1. Click **Send**
+
+1. In Azure Functions console, check the **Logs**
+
+1. Wait 15 seconds and check the **Logs** again
+
+1. Wait 15 seconds and check the **Logs** again
+
+1. Wait 15 seconds and check the **Logs** again
+
+1. Stop debugging
+
+</details>
+
+#### Task 6: Terminate the eternal orchestration
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Start debugging
+
+1. Check the **Logs**
+
+    The eternal orchestration should keep running.
+
+1. In **Postman**, click the **terminatePostUri** link
+
+1. In the new tab, select **POST**
+
+1. Click **Body** select **raw** and under **Text** select **JSON (application/json)**
+
+1. Click **Send**
+
+    > **Warning!** If the orchestration is not terminated, stop debugging, remove the ContinueAsNew instruction and start debugging again.
+    The termination might not work locally in Azure function simulator.
+    The 50 limit has been set in case, if redeploying the function doesn't work.
+
+1. Stop debugging
+
+</details>
+
+## Lab 6: Replace a timer trigger with the Monitor pattern
 
 - Monitors run on intervals, not schedules: a timer trigger runs every hour; a monitor waits one hour between actions. A monitor's actions will not overlap unless specified, which can be important for long-running tasks.
 - Monitors can have dynamic intervals: the wait time can change based on some condition.
@@ -1237,30 +1393,6 @@ In real-life, SMS can be sent to alert the person of his/her **Balance** with lo
 1. After two **"Balance is low!"** logs, go to **Postman**, click the **terminatePostUri**, select **POST** and click **Send**
 
 1. Stop debugging
-
-</details>
-
-## Lab 6: Coordinate the state of long-running operations with the Async HTTP APIs pattern
-
-#### Task 1: Task_Name
-
-<details>
-<summary>Click here to display answers</summary>
-
-1. Step 1
-
-1. Step 2
-
-</details>
-
-#### Task 2: Task_Name
-
-<details>
-<summary>Click here to display answers</summary>
-
-1. Step 1
-
-1. Step 2
 
 </details>
 
