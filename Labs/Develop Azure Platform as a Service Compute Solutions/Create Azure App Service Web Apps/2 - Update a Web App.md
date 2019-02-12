@@ -304,3 +304,132 @@
     If the new version doesn't open with another browser, use another one, or use a private session
 
 </details>
+
+## Lab 4: Deploy in Azure Container with Docker
+
+#### Prerequisite: Install and configure Docker on Windows
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. Open a web browser and go to [**Docker Desktop (Windows)**](https://hub.docker.com/editions/community/docker-ce-desktop-windows)
+
+1. Sign-in or sign-up
+
+1. Click **GetDocker**
+
+1. Save the file on your computer
+
+1. After download completion, run the **Docker for Windows Installer**
+
+1. Click **OK** on **Configuration** dialog
+
+1. Click **Close and log out** on **Installation succeeded** dialog
+
+1. Log in to **Windows**
+
+1. A **Welcome** dialog will pop up, login with your Docker ID
+
+1. Right-click on **Docker Desktop** icon in the **Windows Taskbar** and select **Settings**
+
+1. Click **Shared Drives**
+
+1. Check the **C** drive
+
+1. Click **Apply**
+
+1. In the **File Sharing** dialog, log in with your **Windows** credentiels
+
+1. Close the **Settings** window
+
+1. Open a command prompt (Win+R then cmd)
+
+1. Type the command **docker login**
+
+1. Log in with your **Docker** credentiels
+
+    > **Note:** If you were already logged in, the message **Login Succeeded** will be displayed. If not, after log in, the same message will be displayed.
+
+</details>
+
+#### Task 1: Add Docker Support to your web app and debug locally
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **Solution Explorer**, right-click the **az203webApp** project, select **Add** > **Docker Support**
+
+1. In the **Docker File Options**, under **Target OS**, select **Linux**
+
+1. Click **OK**
+
+1. A **Dockerfile** will open, check the definition
+
+1. Click **Docker** to start debugging
+
+    > **Note:** The **Wep App** will run on **Docker** instead of **IIS Express**
+
+1. In the **Microsoft Visual Studio** dialog, click **Yes** to trust the ASP.NET Core SSL certificate
+
+1. In the **Security Warning** dialog, click **Yes** to confirm the installation of the certificate
+
+1. On your web browser, check the web app
+
+    The Web App runs successfully on a Linux Docker Container.
+
+1. Stop debugging
+
+</details>
+
+#### Task 2: Publish on a new Azure App Service on Linux
+
+<details>
+<summary>Click here to display answers</summary>
+
+1. In the **Solution Explorer**, right-click the **az203** project and select **Publish**
+
+1. Click **New Profile...**
+
+1. In the **Pick a publish target** dialog, click **App Service Linux**, choose **Create New App Service for Containers**, and click **Publish**
+
+1. In the **Create App Service** dialog, click **Sign In** to sign in to your Azure account
+
+1. Under **AppName**, type *az203webAppLinux*
+
+1. Under **Resource Group**, click **New...**, type *az203rg-Docker* and click **OK**
+
+1. Under **Hosting Plan**, click **New...**
+
+1. In the **Configure Hosting Plan** dialog, under **App Service Plan**, type *az203webAppDockerServicePlan*
+
+1. Under **Location**, select the location nearest to your location
+
+1. Under **Size**, select **S1**
+
+1. In the **Configure Hosting Plan** dialog, click **OK**
+
+1. Under **Container Registry**, click **New...**
+
+1. In the **Configure an Azure Container Registry** dialog, under **DNS Prefix**, type *az203webAppContainerRegistry*
+
+1. Under **SKU**, select **Standard**
+
+1. Under **Registry Location**, select the location nearest to your location
+
+1. In the **Configure an Azure Container Registry** dialog, click **OK**
+
+1. In the **Create App Service** dialog, click **Create** 
+
+1. Open the published **Web App**
+
+1. Go to Kudu by adding *.scm* before *azurewebsites.net* in the **URL**
+
+1. In Kudu, click **Environment**
+
+1. Check that the **OS version** is **Unix**
+
+> **Note:** [Click here to consult the tutorial](https://tutorials.visualstudio.com/aspnet-container/publish)
+
+> **Note:** [Click here to consult the documentation](https://docs.microsoft.com/en-us/visualstudio/containers/vs-azure-tools-docker-hosting-web-apps-in-docker)
+
+</details>
