@@ -33,9 +33,17 @@
 
 1. Under **Storage**, select **Use existing**, then select the *az203storageaccountXXXXX* you created in a previous module
 
-1. Under **Application Insights**, leave the default selection
+1. Click **Application Insights**
 
-    > **Note:** Application Insights is enabled by default
+1. In the **Application Insights** pane, click **Enable**
+
+    > **Note:** **Application Insights** is **Disabled** by default.
+
+1. Under **Change you resource**, select **Select existing resource**, and select the *az203ai-XXXXX* created in a previous module
+
+    > **Info:** Create the Application Insights if the previous module hasn't been done.
+
+1. Click **Apply**
 
 1. Click **Create**
 
