@@ -198,7 +198,7 @@
 
 </details>
 
-#### Task 8: Check the logs from the monitoring dashboard
+#### Task 9: Check the logs from the monitoring dashboard
 
 <details>
 <summary>Click here to display answers</summary>
@@ -225,7 +225,7 @@
 
 </details>
 
-#### Task 9: Edit the function's code to log the request query and request body
+#### Task 10: Edit the function's code to log the request query and request body
 
 > **Note:** The request query and request body information are not displayed in the logs.
 
