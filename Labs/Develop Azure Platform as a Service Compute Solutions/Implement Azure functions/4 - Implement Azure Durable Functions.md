@@ -41,8 +41,15 @@ The following labs should be done in Visual Studio 2017.
 
 1. Open **Postman**, and trigger the Http function by pasting the **URL**, selecting the **POST** method and clicking **Send**
 
-1. In the console, the log displays the execution of the **ChainingPattern_Hello**
+1. In the **Response Body**, click on the link next to **statusQueryGetUri**
 
+1. In the new tab, click **Send** and check in the **Response Body** that the **runtimeStatus** is **running**
+
+1. In the console, check the **Logs** 
+    
+    It should display the execution of the **ChainingPattern_Hello**
+
+    ```text
     ...
     Saying hello to Tokyo.
     ...
@@ -50,8 +57,19 @@ The following labs should be done in Visual Studio 2017.
     ...
     Saying hello to London.
     ...
+    ```
 
-1. Click in the menu **Debug**, and select **Stop Debugging**
+1. Back in **Postman**, click **Send** again in the tab with the **statusQueryGetUri** and check the output variable content in the **Response Body**
+
+    ```json
+    "output": [
+        "Hello Tokyo!",
+        "Hello Seattle!",
+        "Hello London!"
+    ],
+    ```
+
+1. Back in **Visual Studio**, click in the menu **Debug**, and select **Stop Debugging**
 
 </details>
 
