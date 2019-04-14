@@ -343,4 +343,6 @@ DeleteAllBlobSnapshotsAsync(
 
 </details>
 
-#### Task 2: Call the ListBlobSnapshotsAsync method to chech that all the Alpha.txt blob' snapshots have been deleted
+#### Task 2: Call the ListBlobSnapshotsAsync method to check that all the Alpha.txt blob' snapshots have been deleted
+
+#### Task 3: In the main method, comment all the snapshots methods calls
