@@ -354,7 +354,7 @@ DisplayBlobLeaseAsync(
 
 #### Task 7: Start debugging to test the methods
 
-## Lab 1: Implement blob leasing from HTTP requests
+## Lab 2: Implement blob leasing from HTTP requests
 
 :stopwatch: 5 minutes
 
