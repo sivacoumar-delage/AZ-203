@@ -363,9 +363,59 @@ DisplayBlobLeaseAsync(
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Go to [Azure Portal](https://portal.azure.com/)
 
-1. Step 2
+1. Click **Storage accounts** and click the *az203storageaccountXXXXX* storage account
+
+1. Click **Blobs** and click *az203-blob-storage*
+
+1. Click *Avanade.Logo.png*
+
+1. Click **Generate SAS**, and under **Permissions**, select **Read** and **Write**
+
+1. Click **Generate blob SAS token and URL** and copy the **Blob SAS URL**
+
+1. Open **Postman**
+
+1. Change the method to **HEAD** and paste the copied **URL**
+
+1. Click **SEND**
+
+1. In the response, click **Headers** and check the **x-ms-lease-status**, **x-ms-lease-state** values
+
+     ```text
+    x-ms-lease-status → unlocked
+    x-ms-lease-state → available
+    ```
+
+1. Open a new tab in **Postman**
+
+1. Change the method to **PUT** and paste the **Blob SAS URL** and add *&comp=lease* at the end of the **URL**
+
+1. Click **Headers**
+
+1. Add the key **x-ms-lease-action** with the value **acquire**
+
+1. Add the key **x-ms-lease-duration** with the value **60**
+
+1. Click **SEND**
+
+1. Go back to the first tab and click **SEND** to check the lease status
+
+1. In the response, click **Headers** and check the **x-ms-lease-status**, **x-ms-lease-state** and **x-ms-lease-duration** values
+
+    ```text
+    x-ms-lease-status → locked
+    x-ms-lease-state → leased
+    x-ms-lease-duration → fixed
+    ```
+
+1. Wait 60 seconds and check the lease status again
+
+     ```text
+    x-ms-lease-status → unlocked
+    x-ms-lease-state → expired
+    ```
 
 </details>
 
@@ -374,9 +424,21 @@ DisplayBlobLeaseAsync(
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. Go back to the second tab, in the response headers, copy the lease Id
 
-1. Step 2
+1. In the **Request Headers**, update the value for the key **x-ms-lease-action** with the value **renew**
+
+1. Add the key **x-ms-lease-id** and paste the lease Id in the **value**
+
+1. Click **SEND**
+
+1. Check the lease status in the first tab
+
+    ```text
+    x-ms-lease-status → locked
+    x-ms-lease-state → leased
+    x-ms-lease-duration → fixed
+    ```
 
 </details>
 
@@ -385,9 +447,13 @@ DisplayBlobLeaseAsync(
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Go back to the second tab
 
-1. Step 2
+1. In the **Request Headers**, update the value for the key **x-ms-lease-action** with the value **change**
+
+1. Add the key **x-ms-proposed-lease-id** and add a GUID in the **value**
+
+1. Check the new lease Id in the **Response Headers**
 
 </details>
 
@@ -396,9 +462,22 @@ DisplayBlobLeaseAsync(
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1
+1. In the second tab, copy the lease Id
 
-1. Step 2
+1. In the **Request Headers**, paste the lease Id in the header **x-ms-lease-id**
+
+1. Update the value for the key **x-ms-lease-action** with the value **release**
+
+1. Disable the header **x-ms-proposed-lease-id** by unchecking it
+
+1. Click **SEND**
+
+1. Check the lease status in the first tab
+
+    ```text
+    x-ms-lease-status → unlocked
+    x-ms-lease-state → available
+    ```
 
 </details>
 
@@ -407,8 +486,23 @@ DisplayBlobLeaseAsync(
 <details>
 <summary>Click here to display answers</summary>
 
-1. Step 1  
+1. Acquire a new lease from the second tab
 
-1. Step 2
+1. Copy the lease Id
+
+1. In the **Request Headers**, paste the lease Id in the header **x-ms-lease-id**
+
+1. Update the value for the key **x-ms-lease-action** with the value **break**
+
+1. Click **SEND**
+
+1. Check the lease status in the first tab
+
+    ```text
+    x-ms-lease-status → locked
+    x-ms-lease-state → breaking
+    ```
+
+1. Release the lease in the second tab
 
 </details>
