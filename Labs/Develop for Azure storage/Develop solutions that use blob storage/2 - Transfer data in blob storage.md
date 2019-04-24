@@ -47,7 +47,7 @@
 
 </details>
 
-#### Task 4: Create an App.config file and add the storage account connection string
+#### Task 4: Create an appsettings.json file and add the storage account connection string
 
 <details>
 <summary>Click here to display answers</summary>
