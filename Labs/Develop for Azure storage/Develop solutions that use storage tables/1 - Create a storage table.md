@@ -230,7 +230,7 @@
 
 1. Copy the same URL from previous tab
 
-1. In the URL, replace *az203table* by c
+1. In the URL, replace *az203table* by *az203table(PartitionKey='Blue', RowKey='Beta')*
 
 1. Change the method to **MERGE**
 
@@ -240,18 +240,7 @@
 
     ```json
     {  
-        "Address":"Paris",  
-        "Age":24,  
-        "AmountDue":654.23,  
-        "CustomerCode@odata.type":"Edm.Guid",  
-        "CustomerCode":"c9da6455-213d-42c9-9a79-3e9149a57833",  
-        "CustomerSince@odata.type":"Edm.DateTime",  
-        "CustomerSince":"2008-07-10T00:00:00",  
-        "IsActive":true,  
-        "NumberOfOrders@odata.type":"Edm.Int64",  
-        "NumberOfOrders":"128",  
-        "PartitionKey":"Blue",  
-        "RowKey":"Beta"  
+        "Address":"Paris"
     }  
     ```
 
